@@ -1,0 +1,1842 @@
+================================================================================
+FLIGHT SAFETY MEASUREMENTS OF UAVs IN CONGESTED AIRSPACE
+Chinese Journal of Aeronautics, 2016
+Total Pages: 12
+================================================================================
+
+
+================================================================================
+PAGE 1
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+ChineseJournalofAeronautics,(2016),xxx(xx):xxx–xxx
+1
+Chinese Society of Aeronautics and Astronautics
+& Beihang University
+Chinese Journal of Aeronautics
+cja@buaa.edu.cn
+www.sciencedirect.com
+REVIEW ARTICLE
+2
+Flight safety measurements of UAVs in congested
+4
+airspace
+5
+Xiang Jinwu, Liu Yang, Luo Zhangping*
+6
+7 Schoolof AeronauticScience andEngineering, BeihangUniversity, Beijing100083,China
+8 Received 2September 2015; revised18November 2015; accepted 15June 2016
+9
+11 KEYWORDS Abstract Describing spatial safety status is crucial for high-density air traffic involving multiple
+12
+unmannedaerialvehicles(UAVs)inacomplexenvironment.Aprobabilisticapproachisproposed
+13 Airspacesafetysituation;
+14 Conflictprobability; to measure safety situation in congested airspace. The occupancy distribution of the airspace is
+15 Flightconflict; representedwithconflictprobabilitybetweenspatialpositionsandUAV.Theconceptofasafety
+16 Navigation; envelope related toflight performance and response time is presented first instead of the conven-
+17 UAV tional fixed-size protected zones around aircraft. Consequently, the conflict probability is
+performance-dependent, and effects of various UAVs on safety can be distinguished. The
+uncertaintyofaUAVfuturepositionisexplicitlyaccountedforasBrownianmotion.Ananalytic
+approximatealgorithmfortheconflictprobabilityisdevelopedtodecreasethecomputationalcon-
+sumption. The relationship between safety and flight performance are discussed for different
+responsetimes andpredictionintervals. Toillustrate theapplicationsoftheapproach,anexperi-
+mentofthreeUAVsinformationflightisperformed.Inaddition,anexampleoftrajectoryplanning
+is simulated for one UAV flying over airspace where five UAVs exist. The validation of the
+approachshowsitspotentialinguaranteeingflightsafetyinhighlydynamicenvironment.
+18 (cid:1)2016ProductionandhostingbyElsevierLtd.onbehalfofChineseSocietyofAeronauticsand
+Astronautics.ThisisanopenaccessarticleundertheCCBY-NC-NDlicense(http://creativecommons.org/
+licenses/by-nc-nd/4.0/).
+19 1.Introduction ation safety is facing a new challenge caused by high-density 22
+airtrafficinlimitedairspace.Emergencyrescueandformation 23
+20 Withincreasingnumbersofunmannedaerialvehicles(UAVs) flyingusuallysuffersincongestedairspace.Thesameproblem 24
+21 andexpandedoperationsintocomplexmissionscenarios,avi- isencounteredbycivilaviationwhenreducingflightseparation 25
+to improve transportation efficiency and increase airspace 26
+capacity, and also by certain innovative techniques under 27
+* Correspondingauthor. development, such as autonomous risk avoidance and free 28
+E-mailaddresses:xiangjw@buaa.edu.cn(X.Jinwu),youngka@126. flight. In order to accomplish complicated military missions 29
+com(L.Yang),luozp@buaa.edu.cn(L.Zhangping). safely and effectively, coordinated formation flight (CFF) 30
+PeerreviewunderresponsibilityofEditorialCommitteeofCJA. hasbeeninvestigatedbymanyresearchers.Theincreaseofcol- 31
+lisionriskamongUAVsresultsinflightsafetyproblemsmore 32
+seriousthanever.1Fundamentally,anintuitiverepresentation
+33
+Production and hosting by Elsevier of airspace safety and, especially its tendencies are crucial to 34
+http://dx.doi.org/10.1016/j.cja.2016.08.017
+1000-9361(cid:1)2016ProductionandhostingbyElsevierLtd.onbehalfofChineseSocietyofAeronauticsandAstronautics.
+ThisisanopenaccessarticleundertheCCBY-NC-NDlicense(http://creativecommons.org/licenses/by-nc-nd/4.0/).
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 2
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+2 X. Jinwu etal.
+35 solvingthisissue.Thisleadstotherequirementfortimelyand based on airspace safety are presented. In Section 5, conclu- 97
+36 credibleconstructsof safety incongested airspace. sionsare drawn. 98
+37 Thecomplexityofairtrafficdenseflightliesinenvironmen-
+38 tal dynamics; therefore, the airspace situation varies dynami- 2. Airspacesafety 99
+39 cally. There are often many maneuvers in low altitude flight,
+40 especially for UAVs, and the highly dynamic motions result 2.1. UAV safetyenvelopemodel 100
+41 in difficulty for risk assessment of flight routes. In civil avia-
+42 tion,reliableriskassessmentapproachesforfixedrouteshave
+43 been developed by Reich2–4 and Brooker.5 These methods Thesafetyenvelopeisusedtocharacterizethespacerangethat 101
+a UAV can reach in a certain time frame. It is an enclosed 102
+44 employedhistoricalstatisticstoassessthelong-termlongitudi-
+space determined by UAV flight performance and prescribed 103
+45 nal,lateralandverticalconflictrisks.Assessingairspacecom-
+time frame. InFig. 1, the six axesa, b, c, d, e, f represent the 104
+46 plexity in a mid-term horizon has recently attracted more
+maximumrangethatUAVAisabletoreachineachdirection 105
+4
+4
+7
+8
+r
+e
+e
+n
+s
+c
+e
+o
+a
+u
+rc
+n
+h
+ters
+in
+r
+t
+e
+e
+q
+re
+u
+s
+i
+t
+rin
+s
+g
+in
+e
+c
+v
+e
+as
+t
+iv
+im
+e
+e
+m
+ly
+an
+i
+e
+d
+u
+e
+v
+n
+e
+t
+r
+i
+s
+fic
+c
+a
+a
+t
+n
+io
+l
+n
+ead
+of
+to
+d
+m
+an
+o
+g
+re
+er
+e
+o
+f
+u
+fi
+s
+-
+duringthetimeframe½0;s(cid:2).ThesafetyenvelopeEðXAÞiscom-
+106
+49
+cientATCsystemoperations.6Sridharetal.describeairspace posedofeightdifferentone-eighthellipsoids.Theaxeseandf 107
+50 complexity by the predicted dynamic density.7 Prandini et al. areequalduetothebilateralsymmetryofUAVflightperfor- 108
+51 present an analytic model of air traffic complexity in three mance.However,axesa,b,canddaredifferent.Thespecified 109
+52 dimensional airspace.8 Due to the presence of flight errors, response time is denoted as s, and V f , V b , V a , V d , V l are the 110
+53 approaches to evaluate conflict probability involve predicting maximumforwardvelocity, the maximumbackwardvelocity, 111
+54 futureaircrafttrajectoriesandcomputingtheprobabilitythat themaximumverticalascendingvelocity,themaximumverti- 112
+55 two aircraft get closer than a minimum required separation cal descending velocity and the maximum horizontal lateral 113
+56 based on these trajectories.9–13 Usual methods focus on mid- velocityofaUAV,respectively.Hence,wehavethemaximum 114
+57 term conflict prediction via the geometric analysis of aircraft r 8 angein eachdirection 1 1 1 1 5 6
+5
+5
+6
+8
+9
+0
+r
+m
+in
+el
+e
+a
+a
+t
+t
+h
+i
+i
+r
+o
+v
+c
+e
+d
+ra
+f
+p
+f
+o
+t
+o
+r
+s
+d
+i
+c
+y
+ti
+o
+n
+o
+n
+a
+n
+fl
+m
+.
+ic
+i
+T
+c
+t
+s
+h
+,
+r
+1
+e
+e
+4
+s
+–
+o
+M
+16
+lu
+o
+t
+t
+n
+h
+io
+t
+o
+e
+n
+ug
+C
+in
+h
+ar
+t
+i
+h
+l
+t
+o
+e
+ta
+p
+a
+k
+p
+r
+e
+e
+p
+s
+s
+r
+e
+o
+a
+n
+a
+c
+g
+c
+e
+r
+h
+e
+o
+a
+i
+f
+t
+s
+u
+a
+a
+n
+m
+c
+p
+e
+o
+r
+o
+u
+t
+p
+n
+a
+u
+i
+t
+n
+la
+o
+ty
+r
+f
+>>>>>>< a
+b
+¼
+¼
+V
+V
+f
+b
+(cid:3)
+(cid:3)
+s
+s
+c¼V (cid:3)s ð1Þ
+6
+6
+1
+2
+c
+a
+o
+n
+m
+d
+p
+n
+u
+o
+t
+t
+at
+a
+i
+p
+o
+p
+n
+r
+.
+o
+N
+pr
+e
+i
+v
+a
+e
+te
+rth
+fo
+e
+r
+les
+d
+s
+y
+,
+na
+th
+m
+e
+i
+s
+c
+e
+a
+m
+nd
+eth
+co
+o
+n
+d
+g
+s
+es
+a
+t
+r
+e
+e
+d
+a
+air
+p
+s
+o
+p
+s
+a
+t
+c
+e
+e
+r
+.
+io
+I
+r
+n
+i >>>>>>:
+d¼V
+a
+d
+(cid:3)s
+63 this work, the occupancy distribution of the airspace, which e¼f¼V l (cid:3)s 111188
+64 is represented with conflict probability between spatial posi- In the inertia coordinate system O-xyz (see Fig. 1), for 119
+6 6 5 6 t s i a o f n et s y. an In d t U hi A s V w s a , y, is o p n r e o c p a o n se h d av a e s e t x h p e li d ci e t te a r w m a i r n e a n n e t ss o a f b a o ir u s t p a a i c r e - UAV A whose position is XA ¼½xA;yA;zA(cid:2)T, we define the 120
+67 spacecongestion for apredicted time interval. safetyenvelope EðXAÞas the regioncentered at XA 121
+8 122
+6
+6
+8
+9 con
+I
+fl
+n
+ic
+m
+t
+a
+p
+n
+r
+e
+e
+u
+d
+v
+ic
+e
+t
+r
+i
+i
+o
+n
+n
+g fl
+a
+i
+n
+g
+d
+ht,
+re
+a
+s
+i
+o
+rc
+lu
+ra
+ti
+f
+o
+t
+n
+n
+;
+ee
+a
+d
+t
+t
+p
+o
+re
+f
+s
+r
+e
+e
+n
+q
+t
+u
+,
+en
+fl
+t
+i
+l
+g
+y
+ht
+pe
+r
+r
+o
+fo
+u
+r
+te
+m
+s
+>>>>>< X
+X
+2
+2
+R
+R
+3
+3
+j
+j
+ð
+ð
+X
+X
+(cid:4)
+(cid:4)
+X
+X
+A
+A
+Þ
+Þ
+T
+T
+M
+M 1
+ð
+ð
+X
+X
+(cid:4)
+(cid:4)
+X
+X
+A
+A
+Þ
+Þ
+6
+6
+1
+1
+x
+x
+P
+P
+x
+x
+A
+A
+;
+;
+z
+z
+P
+<z
+z
+A
+A
+70 are varied, and separation minima is difficult to maintain. In EðXAÞ¼ 2
+71 conflict prediction, aircraft may encounter intruders from >>>>>: X2R3jðX(cid:4)XAÞ TM 3 ðX(cid:4)XAÞ61 x<xA; zPzA
+72 any direction, thus the minimal safe separation is replaced X2R3jðX(cid:4)XAÞ TM ðX(cid:4)XAÞ61 x<xA; z<zA
+4
+73 by a protected zone around aircraft (the REICH model is ð2Þ 112244
+74 actuallyacuboidprotectedzone).Duetothedifferentkinetic
+75 characteristicsandflightperformancebetweenvarioustypesof where M i 2R3(cid:3)3 ði¼1;2;3;4Þ isa diagonalmatrix givenby 125
+8 (cid:2) (cid:3) 126
+7
+7
+7
+6
+7
+8
+a
+s
+s
+h
+u
+ir
+o
+c
+c
+h
+u
+ra
+ld
+a
+ft
+s
+r
+,
+e
+t
+t
+l
+h
+h
+a
+e
+e
+te
+c
+p
+t
+o
+r
+o
+m
+es
+a
+p
+c
+ir
+r
+u
+c
+i
+t
+b
+r
+a
+a
+e
+t
+d
+f
+io
+t
+n
+p
+p
+r
+e
+o
+o
+rf
+t
+f
+o
+ec
+r
+r
+e
+m
+te
+a
+d
+a
+c
+n
+h
+z
+c
+a
+o
+e
+b
+n
+.
+le
+e
+So
+s
+f
+m
+o
+et
+r
+s
+e
+,
+c
+r
+o
+h
+e
+n
+s
+a
+e
+fl
+v
+a
+e
+i
+r
+c
+c
+t
+b
+h
+e
+p
+e
+m
+r
+n
+e
+e
+d
+t
+d
+i
+h
+c
+e
+o
+t
+v
+i
+d
+o
+e
+s
+l
+n
+-
+,
+>>>>>>><M M
+1
+2
+¼
+¼
+d
+d
+i
+i
+a
+a
+g
+g
+(cid:4)
+(cid:4)
+a
+a
+1
+1
+2
+2
+;
+;
+e
+1
+e 1
+2
+2
+;
+;
+c
+1
+d
+2
+1 2(cid:5)
+(cid:5)
+7 8
+8
+9 0
+1
+o z
+d
+o p
+y
+n
+n
+ed e
+a
+s
+m
+f i o s
+ic
+r g t
+s
+e h
+y
+n i
+s
+e s
+t
+r
+e
+i a s
+m
+s ll u
+s
+y
+.
+e r .
+T
+e T l
+h
+a h
+e
+t e e
+a
+d m
+n
+t
+a
+a o
+l
+t
+y
+h t
+s
+h e
+is
+m e
+a
+r a e
+t
+t
+t
+a i
+e
+c c
+m
+a h l a
+p
+f b
+t
+o
+s
+i r l m i
+t
+t
+o
+y u
+d
+a la
+i
+n
+v
+t a i
+i
+o
+d
+ly n
+e
+si o
+t
+s
+h
+f o
+e
+p f r
+a
+a o
+ir
+i t r
+s
+e c
+p
+c r
+a
+t a e
+c
+f d
+e
+t >>>>>>>: M
+M
+3 ¼
+¼
+d
+d
+i
+i
+a
+a
+g
+g
+(cid:4)b 1
+1
+2 ;
+;
+e 1
+1
+2 ;
+;
+c 1
+1
+2(cid:5) ð3Þ
+82 intotwoparts:thosethatarereachablefromtheinitialcondi- 4 b2 e2 d2 112288
+83 tions and those that are not. Recently, some contributions and Misa functionof M 1 , M 2 , M 3 andM 4 129
+84 havedealtwiththemathematicaldescriptionofreachablesets 8 130
+85 and their numerical computation.17–21 Considering that the >>>< M 1 xPxA; zPzA
+86 encounter model is key for assessing conflict probability, we M¼ M 2 xPxA; z<zA ð4Þ
+87 present the safety envelope as the protected zone that should >>>: M
+3
+x<xA; zPzA
+8
+8
+8
+9
+n
+ra
+o
+n
+t
+ge
+be
+th
+p
+a
+e
+t
+n
+a
+etr
+U
+a
+A
+te
+V
+d b
+co
+y
+ul
+i
+d
+ntr
+r
+u
+ea
+d
+c
+e
+h
+rs.
+in
+It
+a
+i
+s
+n
+p
+d
+e
+i
+c
+c
+i
+a
+fi
+t
+e
+e
+d
+s
+r
+t
+e
+h
+s
+e
+po
+m
+n
+a
+se
+xim
+tim
+um
+e,
+M
+4
+x<xA; z<zA
+113322
+90 thenrelates theUAV performance toconflict probability. Thus, wecan rewrite EðX A Þ as 133
+n (cid:6) o 134
+91 The rest of the paper isorganized as follows: in Section2, EðXAÞ¼ X2R3 (cid:6) (cid:6)ðX(cid:4)XAÞ TMðX(cid:4)XAÞ61 ð5Þ
+92 the definitions of UAV safety envelope and airspace safety 113366
+93 are introduced; a probabilistic approach for the measure of
+The safety envelope provides maneuvering space for a 137
+94 airspacesafetyispresented.InSection3,weanalyzetheeffect
+UAV. In other words, a UAV can perform any maneuver in 138
+95 of UAV flight performance on conflict probability and con- the safety envelope during the time frame ½0;s(cid:2) without 139
+96 struct the airspace safety field. In Section 4, two applications
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 3
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+Flight safetymeasurements of UAVsin congested airspace 3
+Fig.1 SafetyenvelopeofUAVA.
+Fig.2 FuturepositionofaUAV,accountingforuncertainty.
+140 worrying about conflicts with other aircraft. Obviously, the
+141 shapeofthesafetyenvelopedependsonthefivevelocitiesthat interval ½t 0 ;t 0 þDt(cid:2), a conflict is considered to have occurred. 180
+142 represent UAV flight performance. The parameter s controls Similarly, we define the event in which a space point X is in 181
+143 the size ofthe safety envelope. conflict with UAV A as point X entering the safety envelope 182
+of UAV A during the time interval ½t 0 ;t 0 þDt(cid:2). The conflict 183
+144 2.2.Flight statepropagation probability isdenotedas 184
+185
+pAðXÞ¼PfX2EðXAÞjt2½t 0 ;t 0 þDt(cid:2)g ð7Þ 118877
+145 Measuring airspace safety involves the estimation of conflict
+146 probability, which is only as reliable as the ability of UAV Assuming multiple UAVs A i ði¼1;2;...;NÞ are flying in 188
+147 motion model to predict the future. The key to modeling lies the same airspace, the safety of the space point X is denoted 189
+148 in how current UAV states are projected into the future. In
+ass(X).Thisistheprobability thatpointXisinconflictwith
+190
+149 theproposedmodel,futureUAVpositiondependsontwoele- at least one UAV during the time interval ½t 0 ;t 0 þDt(cid:2). It also 191
+150 ments: the nominal trajectory and uncertainties. Usually, means that point X enters at least one UAV safety envelope. 192
+151 uncertainties are modeled to describe potential variations in Then wehave 193
+194
+152 the nominaltrajectory of aUAV (see Fig.2). [N
+153 SupposeUAVAisflyingalonganominaltrajectorywitha sðXÞ¼ PðX2EðXAiÞjt2½t 0 ;t 0 þDt(cid:2)Þ ð8Þ
+154 velocity profile vA in the three-dimensional airspace S(cid:5)R3 i¼1 119966
+155 duringthetimehorizon½0;t(cid:2).X 0 A representsUAVinitialposi- Notethats(X)=0meansspacepointXwillnotbeinside 197
+156 tion attimet=0s.TheUVA’s future positionisnotknown any of the existing UAV safety envelopes during the time 198
+157 preciselyduetouncertainty.However,inpractice,thepredic- interval ½t 0 ;t 0 þDt(cid:2). In addition, s(X)=1 signifies that space 199
+158 tionerrorcanbemodeledthroughaGaussianrandompertur- point X will enter at least one safety envelope of these UAVs 200
+159 bation whose variance increasesboth linearly with time t and during the time interval ½t 0 ;t 0 þDt(cid:2). s(X) indicates the degree 201
+160 faster along-track than in the cross-track directions.7 The of danger for space point X. When s(X) exceeds the specified 202
+161 UAV predicted position XAðtÞ2R3 at time t is then formu- threshold, point X is considered to be dangerous for new 203
+162 lated by UAVsto enterduringthe time interval½t 0 ;t 0 þDt(cid:2) . 204
+163 Z The probability that space point X enters the safety envel- 205
+t
+116655 XAðtÞ¼X 0 Aþ 0 vAðsÞdsþwAðtÞ tP0s ð6Þ o as pe pA o ið f X U Þ A .A V ss A u i m d i u n r g in t g he th B e r t o i w m n e ia in n te m rv o a t l io ½ n t 0 ; a t f 0 fe þ ct D in t g (cid:2)i t s h d e e f n u o tu te r d e 2 2 0 0 6 7
+166 where wAðtÞ¼QAðtÞRABAðtÞ, with BAðtÞ a standard three- positionsoftheseUAVsareindependent,thesafetysituations 208
+167 dimensional Brownian motion starting from the origin whose (X) satisfies 209
+210
+168 varianceis givenbythe matrixQAðtÞRA 2R3(cid:3)3. YN
+1 1 6 7 9 0 entr I i n es d r et 1 A a , il r , 2 R A A an ¼ d d r i 3 A ag a ð r r e 1 A t ; h r e 2 A v ; a r r 3 i A a Þ n i c s e a g d ro ia w g t o h n r a a l t m es a o tr f ix th w e h p o e s r e - sðXÞ¼1(cid:4) i¼1 ð1(cid:4)pAiðXÞÞ ð9Þ 221122
+171 turbationinthealong-trackandthetwocross-trackdirections. Theproblemofevaluatingsafetyisreducedtothatofestimat- 213
+172 They comply with the relation r 1 A Pr 2 A ¼r 3 A >0. ing the conflictprobability pAiðXÞ. 214
+173 QAðtÞ¼½q 1 AðtÞ;q 2 AðtÞ;q 3 AðtÞ(cid:2)2R3(cid:3)3 is an orthogonal matrix
+174
+whosefirstcolumnq
+1
+AðtÞissetasq
+1
+AðtÞ¼vA=kvAk.Analogous 2.4. Analysis of conflict probability 215
+175 models have been proposed in Refs. 9,11,22 for predicting
+176 future aircraftpositionovertens of minutes. Generally,approachestothecalculationofpAiðXÞtakeagreat 216
+amountofcomputation.Thecomputingtimegrowsexponen- 217
+177 2.3.Measure ofairspace safety tiallywiththeincreaseinthenumberofaircraft.7Nowwewill 218
+examine an approximate analytical model for the probability 219
+178 Thesafetyenvelopespecifies theprotectedzoneof aUAV. If pAiðXÞ,droppingthesubscriptofA i inthefollowingequations 220
+179 other UAVs enter the safety envelope during the flight time forease ofnotation. 221
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 4
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+4 X. Jinwu etal.
+222 The probability pAðXÞ considers the event where space
+223 pointXentersthesafetyenvelopeEðXAÞcenteredatXA with
+224
+aconstantvelocityvAandperturbationwAðtÞduringthetime
+225 interval ½t 0 ;t 0 þDt(cid:2) (see Fig. 3). From the perspective of rela-
+226 tivemotion,ifUAVAisconsideredtobestationarywithonly
+227
+theperturbationwAðtÞ,thenthesafetyenvelopecenteredatX
+228 should move at a constant velocity (cid:4)vA contrary to UAV A
+229
+(seeFig.4).Hence,EðXAÞandEðXÞhaveequalsizebutdiffer-
+230 ent centers. FromEq.(7),we have
+231
+pAðXÞ¼PfX2EðXAÞjt2½t ;t þDt(cid:2)g
+0 0
+223333 ¼PfXA 2EðXÞjt2½t 0 ;t 0 þDt(cid:2)g ð10Þ
+Fig. 3 Probability that X enters EðXAÞ: PfX2EðXAÞ
+234 With the assumption that UAV A is moving along a
+jt2½t ;t þDt(cid:2)g.
+235 straight line of nominal trajectory with constant velocity, 0 0
+236 Eq.(6)canbe rewritten as
+237
+223399 XAðtÞ¼XAþvAtþwAðtÞ tP0s ð11Þ
+0
+240 The relative position DXðtÞ¼X(cid:4)XAðtÞ of UAV A with
+241 respectto the pointXis givenby
+242
+224444 DXðtÞ¼X(cid:4)XA(cid:4)vAt(cid:4)wAðtÞ ð12Þ
+0
+245 Denote DX 0 ¼X(cid:4)X 0 A andDv¼(cid:4)vA, Eq.(12)becomes
+246
+224488 DXðtÞ¼DX 0 þDvt(cid:4)wAðtÞ ð13Þ
+249 From Eq. (13), we can consider the motion of UAV A as
+250 consisting only of the perturbation wAðtÞ and the motion of
+251 space point X as determined by constant velocity Dv starting
+252 fromDX 0 .Then,pAðXÞistransformedastheprobabilitythat Fig. 4 Probability that XA enters EðXÞ:
+253 theperturbationwAðtÞhitsthesafetyenvelopewhosecenteris PfXA2EðXÞjt2½t ;t þDt(cid:2)g.
+0 0
+254 movingat aconstant velocityfor somet2½t 0 ;t 0 þDt(cid:2):
+255
+225577 PfwAðtÞ2EðDX 0 þDvtÞjt2½t 0 ;t 0 þDt(cid:2)g ð14Þ pAðXÞ¼PðB^ ðtÞ2E ^ ðZÞjt2½t ;t þDt(cid:2)Þ ð18Þ
+258 Furthermore, wAðtÞ can be transformed to a standard 0 0 228877
+259 three-dimensionalBrownianmotionbythefollowingprocess. where 288
+260 Define the matrix F¼QARA, and the vector u¼F(cid:4)1Dv. (cid:7) (cid:6) o 289
+261 Construct an orthogonal matrix P¼½p 1 ;p 2 ;p 3 (cid:2)2R3(cid:3)3 with E ^ ðZÞ¼ Z2R3(cid:6) ½Z(cid:4)ðrþktÞ(cid:2)TPTFT(cid:6)MFP½Z(cid:4)ðrþktÞ(cid:2)61
+262 p 1 ¼(cid:4)u=kuk, then align the first column of P with (cid:4)u. Its ð19Þ
+263 inverse P(cid:4)1¼PT represents a rotation that makes the 229911
+264 (cid:4)u=kuk direction coincide with the first coordinate axis ThecenterofE ^ ðZÞismovingattheconstantvelocitykstarting 292
+2 2 6 6 5 6 direction: from the position r. From the construction of matrix P, the 293
+226688 P(cid:4)1 k (cid:4) u u k ¼Z 1 :¼ ½1;0;0(cid:2)T ð15Þ velo N c o it w yk th i e s p d r i o re b c le te m d o a f lo e n v g alu th a e tin n g eg p a A ti ð v X e Þ z i 1 s a tr x a is ns ( f s o e r e m F e i d g. in 5 t ) o . a 2 2 9 9 4 5
+269 Using transformation DZðtÞ¼P(cid:4)1F(cid:4)1DXðtÞ, we transform calculation of the probability that the Brownian motion
+B^
+ðtÞ 296
+270 Eq.(13)into enters theregion E ^ ðZÞduring the timeinterval ½t 0 ;t 0 þDt(cid:2). 297
+2
+22
+7
+77
+1
+33
+DZðtÞ¼rþkt(cid:4)B^
+ðtÞ ð16Þ
+stan
+T
+d
+h
+a
+e
+rd
+pr
+B
+o
+r
+b
+o
+a
+w
+b
+n
+il
+i
+i
+a
+ty
+n
+d
+m
+e
+o
+n
+t
+s
+i
+i
+o
+ty
+n
+f
+B^
+u
+ð
+n
+tÞ
+ct
+i
+i
+s
+on of the three-dimensional 2
+2
+9
+9
+8
+9
+274 where B^ ðtÞ¼P(cid:4)1BðtÞ is still a standard Brownian motion 300
+2 2 7 7 5 6 s r t e a m rt a i i n n g s a fro B m row th n e ian or m ig o in tio ( n r ) o , t a a n ti d on r2 of R3 a , k Br 2 ow R n 3 i a a r n e d m e o fi t n io ed n fðz 1 ;z 2 ;z 3 ;tÞ¼ ð2p 1 tÞ 3 2 e(cid:4) z2 1þz 2 2 2 t þz2 3 ð20Þ 330022
+277 by
+278 The conflict probability is the integral of the probability 303
+( r¼P(cid:4)1F(cid:4)1DX
+0 ð17Þ
+density fu
+Z
+nction
+Z
+i
+Z
+n
+Z
+the safetyenvelope E ^ ðZÞ. 3
+3
+0
+0
+4
+5
+228800
+k¼P(cid:4)1F(cid:4)1Dv¼P(cid:4)1u¼(cid:4)kukZ
+1 pAðXÞ¼
+t0þDt
+fðz ;z ;z ;tÞdz dz dz dt ð21Þ
+1 2 3 1 2 3
+281 From Eq. (16), we take pAðXÞ as the probability that the t0 E^ðZÞ 330077
+282 standard Brownian motion B^ ðtÞ starting from the origin hits Usually,E ^ ðZÞisanirregularregionthatresultsindifficulty 308
+283 a moving safety envelope E ^ ðZÞ obtained by transforming calculatingtheintegralEq.(21).Inordertosimplifythecom- 309
+284 EðDX 0 þDvtÞin the new coordinate system. putation, we use an approximation that replaces the integral 310
+285
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 5
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+Flight safetymeasurements of UAVsin congested airspace 5
+Fig.5 Transformedcoordinates. Fig.6 RegionE ^ ðZÞreplacedbyanequivalentspherewithradius
+r .
+eq
+311 domain E ^ ðZÞ with an equivalent sphere of radius r eq . An
+312 appropriater eq willmakethesphereandtheregionE ^ ðZÞhave itisdifficulttogetananalyticalexpressionofsuchaprobabil- 354
+313 the samevolume. ity, we approximate it by the probability of the event that, 355
+3 3 1 1 4 5 qua S r i t n e c r e el t li h p e so s i a d f s e , ty the en v v o e l l u o m pe eo is f E c ^ o ðZ m Þ po is se c d alc o u f la f t o e u d r b d y ifferent w lo h ca en ted B^ ð in tÞ si fi d r e st th h e it m s i t n h i e m m um ov b in o g un p d la in n g e s p q z , ua th re e S im z . pact point is 3 3 5 5 6 7
+3
+33
+1
+11
+6
+88
+VðE ^ ðZÞÞ¼ 1
+4
+(cid:8) 4p
+3
+ace þ 4p
+3
+ade þ 4p
+3
+bce þ 4p
+3
+bde (cid:9) ð22Þ
+tha
+U
+n
+s
+t
+u
+h
+a
+e
+ll
+v
+y
+ar
+th
+ia
+e
+nc
+v
+e
+elo
+gr
+c
+o
+it
+w
+y
+th
+k
+r
+o
+a
+f
+te
+th
+o
+e
+f
+s
+t
+p
+h
+h
+e
+er
+B
+e
+ro
+E ^
+w
+ðZ
+ni
+Þ
+an
+is
+m
+m
+o
+u
+t
+c
+io
+h
+n
+la B^ r
+ð
+g
+t
+e
+Þ
+r
+,
+3
+3
+5
+5
+8
+9
+therefore only the dimension of the sphere perpendicular to 360
+3 3 1 2 9 0 Thera s d ffi i ffi u ffiffiffi s ffiffiffi o ffiffiffi f ffiffiffi e ffiffi q ffiffiffi u ffi ivalent spherer eq is givenas kisrelevantfortheeventmentionedabove.Asimilarapprox- 361
+r ¼ 3 3VðE ^ ðZÞÞ ð23Þ i c m as a e t . i 1 o 1 n A wa fo s r u m se a d l t d o is h cu a s n s d io le n th o e f p th ro e b a le p m pr i o n xi a m t a w t o io - n dim er e r n o s r io w n a a s l 3 3 6 6 2 3
+332222 eq 4p reported.23 Using the minimum bounding square S z in place 364
+323 Substituting Eqs.(1)and(22) into Eq.(23), wehave of the projected circle E z to calculate the probability pAðXÞ 365
+324 rffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffi contributes to an over approximation and, at the same time, 366
+332266 r eq ¼ 3 V l ðV f V a þV f V d 4 þV b V a þV b V d Þ (cid:3)s ð24Þ an D ov e e fi r n e e s k tim :¼ atio in n ff o t f P sðX 0 Þ s . (cid:6) (cid:6)B^ ðtÞ2p z gasthefirsttimethatthe 3 3 6 6 7 8
+327 Withtheapproximationofanequivalentsphere,thematrixM Brownian motion B^ ðtÞ hits the moving plane p z . Due to the 369
+328 in Eq.(5)becomes three coordinates of B^ ðtÞ being independent one-dimensional 370
+329 !
+Brownian motion, k depends only on the first component 371
+1 1 1
+M¼diag r2 ; r2 ; r2 ð25Þ B ^ 1 ðtÞ of B^ ðtÞ. Specifically, k is the first time that the one- 372
+333311 eq eq eq dimensional Brownian motion B ^ 1 ðtÞ starting from the origin 373
+332 Substituting thisexpression into Eq.(19), we have hits a point Z 1 ðtÞ2R, which depends on the equation 374
+3 33 3 33 3 55 E ^ ðZÞ¼fZ2R3 (cid:6) (cid:6) kZ(cid:4)ðrþktÞk6r eq g ð26Þ Z 1 ð I t n Þ¼ th r e 1 n (cid:4) ew ku c k o t o w rd h i e n r a e te r 1 s i y s st t e h m e , fir a st n c e o g m at p iv o e ne r 1 nt < o 0 f r in 2 di R ca 3. tes 3 3 7 7 5 6
+336 inthe new coordinates (see Fig. 6). that aircraft A is moving away from the space point X. That 377
+337 The center of E ^ ðZÞ is moving at the constant velocity k leads to a zero probability of X entering EðXAÞ. When 378
+338 starting from position r along the negative z 1 axis direction. r 1 <0,we setpAðXÞ¼0. 379
+339 An analytical approximation is then presented for the proba- Whenr 1 P0,theprobabilitydistributionofkischaracter- 380
+3 3 3 4 4 4 0 1 2 b t t h i 2 l e it ½ c y t e 0 i n ; n t t 0 e E r þ q Z . D ( ¼ t 1 (cid:2). 8 r ) L . þ e p t z k p i t s z o d b f e e fi t o h n r e e t d h sp o a h g s e o t r n h e a e E l ^ p t ð l o Z an Þ th e a e t t h v s a e o t l m o p c e a it s t y s i e m k s e , th t i h n ro e st n u a g n p h z t i p z k e ð d tÞ b ¼ y p th ffi 2 r e ffiffi1 p ffiffi p ffi t ffi 3 ffi r ffi o e(cid:4) b ð a r1 b (cid:4)k 2 i u t l k i t t Þ2 y d t en P sit 0 y s function23 ð27Þ 3 3 33 8 8 88 1 2 44
+343 dividesthesphereE ^ ðZÞintotwoequalparts.ProjectingE ^ ðZÞ for anytime TP0s, 385
+344 onto the plane p z , we obtain a circle E z with the radius r eq . Z (cid:8) (cid:9) (cid:11) (cid:8) (cid:9)(cid:12) 386
+345 Define S z as the minimum bounding square containing the T p ðtÞdt¼1(cid:4)U r 1 (cid:4) p k ffi u ffiffiffi kT þe2r1kuk 1(cid:4)U r 1 þ p k ffi u ffiffiffi kT
+346 projection circleE z and S z hasaside length of2r eq . 0 k T T
+347
+Fromthepreviousdiscussion,wedefinepAðXÞastheprob-
+ð28Þ 338888
+348 ability that space point X enters the safety envelope EðXAÞ Z (cid:13) (cid:8) (cid:9) 389
+3 3 4 5 9 0 w th i e th B in ro ½t w 0 ; n t i 0 a þ n D m t o (cid:2), t w io h n ic B h ^ ð i t s Þ tr s a ta n r s t f i o n r g m f e r d om ast t h h e e p o r r o i b g a in bil h it it y s th th a e t T tp k ðtÞdt¼ k r u 1 k 1(cid:4)U r 1 (cid:4) p k ffi T ffi u ffiffi kT
+3 3 5 5 1 2 s d p ir h e e c r t e ion E ^ ð s Z ta Þ rti w n h g o f s r e om cen r t a e t r t m im o e ve t s = in 0s t . h A e c n o e n ga fl t i i c v t e oc z c 1 ur a s xi i s f 0 (cid:4)e2r1kuk (cid:11) 1(cid:4)U (cid:8) r 1 þ p k ffi T ffi u ffiffi kT (cid:9)(cid:12)(cid:14) ð29Þ 339911
+353 and only if
+B^
+ðtÞ ever wanders into the moving sphere. Since
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 6
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+6 X. Jinwu etal.
+R
+392 where UðxÞ¼ (cid:4) x 1 p1ffi 2 ffi p ffiffi e(cid:4)t 2 2 dt is the Cumulative Distribution
+393 Function (CDF) of a(cid:4)standar(cid:4)d n(cid:5)o(cid:5)rmal distribution. We have
+the relation UðxÞ¼1 1þerf pxffiffi (erfðxÞ is the error func-
+394 R 2 2
+395
+tion erfðxÞ¼p2ffi
+p
+ffi
+0
+xe(cid:4)t2dt). The time instant T
+h
+2½t
+0
+;t
+0
+þDt(cid:2)
+396 is the expected time that the Brownian motion
+B^
+ðtÞ hits the
+397 planep z .It isobtained by
+398 R R R
+t0þDttp ðtÞdt t0þDttp ðtÞdt(cid:4) t0tp ðtÞdt
+T ¼ Rt0 k ¼ R0 k R0 k ð30Þ
+440000
+h
+t
+t
+0
+0þDtp
+k
+ðtÞdt
+0
+t0þDtp
+k
+ðtÞdt(cid:4)
+0
+t0p
+k
+ðtÞdt
+401 The projectionof the
+BrownianmotionB^
+ðtÞ atthe impact Fig.7 Variationsofr withUAVflightperformance.
+402 time k on the plane p z is denoted as B^ proj ðkÞ2R2(cid:3)2. When eq
+403 k¼T h , the distribution of B^ proj ðkÞ2R2(cid:3)2 is a two-
+404 dimensional Gaussian random variable with zero mean and
+405 covarianceT h I 2 .TheprobabilitydensityfunctionofB^ proj ðkÞis
+406
+440088 fðx;yÞ¼ 2p 1 T e(cid:4)x2 2T þ h y2 ð31Þ
+h
+409 At time k¼T h , the probability that
+B^
+proj ðkÞ is located
+410 inside the minimum boundingsquare S z iscalculated as
+411 ZZ
+pðT Þ¼PðB^ ðkÞ2S jk¼T Þ¼ fðx;yÞdxdy ð32Þ
+h proj z h
+441133 Sz
+414 Definingl¼rþkT h ¼½l 1 ;l 2 ;l 3 (cid:2)T,thentheminimumbounding
+415 squareis obtainedby
+416 Fig.8 Variationsofr eq withresponsetimes.
+441188 S z ¼fðx;yÞ2R2jkx(cid:4)l 2 k6r eq ;ky(cid:4)l 3 k6r eq g ð33Þ
+419 From Eqs.(31)–(33), wehave
+420 Z Z
+pðT h Þ¼ 2p 1 T e(cid:4)2 x T 2 hdx e(cid:4)2 y T 2 hdy
+h kx(cid:4)l2k6req ky(cid:4)l2k6req
+1(cid:2) (cid:3)
+¼ erfðl þr Þ(cid:4)erfðl (cid:4)r Þ
+4(cid:2) 2 eq 2 eq (cid:3)
+442222 (cid:7) erfðl 3 þr eq Þ(cid:4)erfðl 3 (cid:4)r eq Þ ð34Þ
+423
+Finally,anapproximatedexpressionforpAðXÞcanbewritten
+424 as
+425 Z
+pAðXÞ¼
+t0þDt
+PðB^ ðkÞ2S jk¼T Þp ðtÞdt
+proj z h k
+t0
+Z
+t0þDt
+¼pðT Þ p ðtÞdt ð35Þ
+h k
+442277 t0 Fig. 9 Variations of conflict probability with UAV flight
+performance.
+428 3. Airspace safetyfield
+429 3.1. Effect ofUAV flight performance onconflict probability
+430 Fromthepreviousanalysis,thesafetyenveloperepresentsthe
+431 safeseparationrequirementbetweenUAVs.Asaresultofthe
+432 approximationwherewereplacethesafetyenvelopeE ^ ðZÞwith
+433 anequivalentsphereinEq.(21),theequivalentradiusr eq can
+434 beconsideredtocharacterizethesafeseparationrequirement.
+435 ReviewingEq. (24)in Section2.3,
+436 rffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffi
+VðVV þVV þV V þV V Þ
+r ¼ 3 l f a f d b a b d (cid:3)s
+443388 eq 4
+439 This isrewritten as
+440
+444422 r eq ¼fðVÞ(cid:3)s ð36Þ Fig.10 Variationsofconflictprobabilitywithresponsetimes.
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 7
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+Flight safetymeasurements of UAVsin congested airspace 7
+Fig.11 Airspacesafetyfieldinthehorizontalplanewithresponsetimes¼60s.
+Fig.12 Airspacesafetyfieldinhorizontalplanewithresponsetimes¼30s.
+443
+whereV¼½V
+f
+;V
+b
+;V
+a
+;V
+d
+;V
+l
+(cid:2)TisthestatevectorofUAVflight
+444 performance.Forexample,considerUAVAmovesataveloc-
+445 ity vA ¼½5;0;0(cid:2)Tkm=min from XA ¼½20;40;0(cid:2)Tkm in the
+446 time frame ½t 0 ;t 0 þDt(cid:2)¼½0;10(cid:2)min. The UAV’s maximum
+447 flight velocities are given as follows: V(cid:8) f ¼5km=min,
+448 V(cid:8) b ¼2km=min, V(cid:8) a ¼0:9km=min, V(cid:8) d ¼1:5km=min, V(cid:8) l ¼3
+449
+km=min;theresponsetimeisgivenass(cid:8)¼60s.Thenwehave
+450 thereferencestateV(cid:8)¼½V(cid:8) f ;V(cid:8) b ;V(cid:8) a ;V(cid:8) d ;V(cid:8) l (cid:2)T andthe reference
+451
+r(cid:8)
+eq
+¼2:33km. Around the reference state, the effect of the
+452 maximumforward velocity V f on r eq canbeformulated as
+453 rffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffi
+V(cid:8)½ðV(cid:8)þV(cid:8)ÞV þV(cid:8)V(cid:8)þV(cid:8)V(cid:8)(cid:2)
+r ¼ 3 l a d f b a b d (cid:3)s(cid:8) ð37Þ
+445555 eq 4
+Fig.13 UAVconflictresolutioninhorizontalplane.
+456 In this way, the similar relations between r eq and
+457 V b ;V a ;V d ;V l ;scanbe derived. 470
+458 InFig.7,r eq growswhenmaximumflightvelocityincreases Dr ¼0:11DV þ0:11DV þ0:32DV þ0:32DV
+eq f b a d
+459 inanydirection,althoughthegrowthratesaredifferent.Fig.8
+460 shows r eq performinga linear growth withresponse time. þ0:26DV l þ2:33Ds ð39Þ 447722
+461 Using first order approximation of Taylor expansion to BecauseofthebilateralsymmetryofUAVflightperformance, 473
+462 expand Eq. (37) around the reference state V(cid:8) ¼ r eq hasthesamevariationrateintheplaneofsymmetry,such 474
+4 4 6 6 3 4 ½V(cid:8) f ;V(cid:8) b ;V(cid:8) a ;V(cid:8) d ; (cid:6) V(cid:8) l (cid:2)T and s(cid:8)¼60s (cid:6) , wehave (cid:6) that (cid:6) (cid:6) 4 4 7 7 5 6
+r eq ¼r(cid:8) eq þ @ @ r V eq f (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8)(cid:6) (cid:3)DV f þ @ @ V r eq b (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8)(cid:6) (cid:3)DV b þ @ @ V r eq a (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:6)(cid:8) @ @ r V eq f (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) ¼ @ @ V r eq b (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) ¼0:11 447788
+(cid:3)DV a þ @ @ V r eq d (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) (cid:3)DV d þ @ @ r V eq l (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) (cid:3)DV l þ @ @ r s eq (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) t B h u e t, ve th lo e c y it a ie r s e o d f if a fe U re A n V t in in t t h h e e p h l o a r n i e zo o n f ta a l sy p m la m ne et a r r y e . f G as e t n e e r r t a h l a ly n , 4 4 7 8 9 0
+446666 (cid:3)Ds ð38Þ those in the vertical plane. r eq is more sensitive to changes in 481
+verticalvelocity. Hence, 482
+4 4 4 6 6 6 7 8 9 D w D r e e e fi q h n ¼ a e ve r eq D (cid:4) V i r(cid:8) e ¼ q . V S i u (cid:4) bs V ti (cid:8) i tuti ð n i g ¼ th f; e b r ; e a f ; e d re ; n lÞ c , e s D ta s te ¼ in s t (cid:4) o E s(cid:8) q , . (3 a 8 n ) d , @ @ V r eq a (cid:6) (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) > @ @ r V eq f (cid:6) (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) ; @ @ V r eq a (cid:6) (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) > @ @ r V eq l (cid:6) (cid:6) (cid:6) (cid:6) V(cid:8);s(cid:8) 4 44 8 88 3 55
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 8
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+8 X. Jinwu etal.
+486 InordertoanalyzetheeffectofUAVflightperformanceon used for detecting congested areas within time-space coordi- 544
+487 conflict probability, considering a space point nates. The availability of airspace safety field can support 545
+488 X¼½55;35;0(cid:2)Tkm,weobtaintheconflictprobabilitybetween UAVconflictresolution andtrajectory planning. 546
+489 UAVAand pointX(see Fig. 9).
+490 Apparently, the conflict probability increases with maxi- 4. Applications ofairspace safety fields 547
+491 mum flight velocity in each direction. This is because the
+492 increase of maximum flight velocity enlarges the integral 4.1. Conflictresolution 548
+493 domainwhen calculating theconflict probability.
+494 From Eq. (36), r eq is of a linear growth rate with the Theairspacesafetyfieldiscomposedoftheconflictprobability 549
+495 response time s around the reference state V(cid:8). The conflict ineachdiscretepointaftertheairspacewasdiscretized.When 550
+496 probability also significantly increases with the response time airspace safety conditions around a UAV in the future time 551
+497 s. When s¼3min, the safety envelope grows to three times interval½0;t(cid:2) isobtained, UAVconflict resolutioncan beper- 552
+498 that which would result in a certain conflict between UAV A formed. Usually, there are four kinds of maneuvering for 553
+499
+andpointX.TheconflictprobabilitypAðXÞ(cid:9)1:0(seeFig.10).
+UAV flight conflicts: left turn or right turn in the horizontal 554
+500 TakingtheeffectofUAVflightperformanceintoconsider- planeandclimbingordescendinginverticalplane.InFig.13, 555
+501 ation when determining safe separation will improve the
+502 utilization efficiency of airspace. According to Eq. (36), the
+503 safety envelope is variable for different UAVs and different
+504 response times.
+505 3.2. Construction ofairspace safety field
+506 SupposingtherearenUAVsexistingintheairspace,weobtain
+507 the measureof airspacesafety
+508
+Xi
+sðXÞ¼fðn;t ;Dt;X;Xi;vi; ;Vi;Vi;Vi;Vi;Vi;siÞ
+0 0 f b a d l
+551100 i¼1;2;...;n ð40Þ
+511 If the parameters mentioned above are obtained, sðXÞ is
+512 determined.TheincreaseofV f ,V b ,V a ,V d ,V l andswillresult
+513 in a larger safety envelope and also a larger integral domain
+514 when computing the conflict probability pAðXÞ. In Eq. (8),
+515 sðXÞ is obviously an increasing function of pAðXÞ. If X varies
+516 overS,anairspacesafetyfieldcanbeconstructed.Discretizing
+517
+airspaceSbyusingauniformgriddingofstepsizeq>0along
+518
+allaxes,onecanevaluatesðXÞ acrossS.Thefollowingexam-
+519 ples are forillustration.
+520 Fig.11(a)–(c)aretheairspacesafetyfieldsinthehorizontal
+521 plane during different time frames T tf . In the simulation, two
+522 UAVs move in the horizontal plane at the same constant
+523
+velocityv¼4km=min.Theyalsohavethesameflightperfor-
+524 mance,withthemaximumvelocitiesgiveninSection3.1.One Fig.14 Experimentsite.
+525 UAVmovestoeastwhiletheothermovesnorthwest(thewhite
+526 dotsandarrowsdenotethepositionsanddirectionsofUAVs).
+527 Models of the safety field during three time frames ½0;5(cid:2)min,
+528
+½5;10(cid:2)minand½0;10(cid:2)minareshown.InFig.11,thered1areas
+529 indicatetheoccupiedregionofacertainexistingUAV,hence
+530 new entered UAVs should avoid passing through this area
+531 within the time frame T tf . The blue area represents the free
+532 region of no existing UAVs. An intermediate color between
+533 red and blue signifies the degree of danger according to the
+534 magnitudeofprobability.InFig.12,theresponsetimeishalf
+535 of that in Fig. 11, with a corresponding halving in size of the
+536 safety envelope. A smaller safety envelope means a smaller
+537 protectedzoneto avoidbeingpenetrated.Therefore,the con-
+538 gested area of high conflict risk in Fig. 12 is less than that of
+539 Fig.11.Thisisapparentlyobservedintheairspacesafetyfield.
+540 Theairspacesafetyfieldclearlyshowstheoccupancydistri-
+541 bution of airspace. Constructing the safety fields for different
+542 consecutive time intervals can predict when UAVs enter and
+543 leave a certain zone in the airspace. This information can be Fig.15 TrajectoriesofthreeUAVs.
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 9
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+Flight safetymeasurements of UAVsin congested airspace 9
+Fig.16 Variationsofsafetyfieldsinformationflight.
+556 takethesafetyofthehorizontalplaneasanexample.Supposea istheconflictprobabilityoftheunitareainfrontoftheUAV, 564
+557 UAV is flying at a constant velocity, and X¼½x;y(cid:2)T is the wehave 565
+558 UAV’s current position. i¼minfx~2Zjx~Pxg, j¼min 1 (cid:2) (cid:3) 566
+559 fy~2Zjy~Pyg,ðZÞisthesetofintegers.Theconflictprobabil- pðS forward Þ¼ 4 pðX i(cid:4)1;j ÞþpðX i;j ÞþpðX i(cid:4)1;jþ1 ÞþpðX i;jþ1 Þ ð41Þ 556688
+560 itypðX i;j ÞindicatesthesafetyofpointX i;j andcanbecalculated
+561 byEq.(35).DenoteS forward astheunitareainfrontoftheUAV. Inthe sameway, wehave 5 5 6 7 9 0
+5 5 6 6 2 3 S th im ef il r a o r n ly t- , r S ig le h ft t i u s n th it e a f r r e o a nt o - f le t f h t e u U ni A ta V re ( a se o e f F th ig e . U 13 A ). V If an p d ðS S fo r r ig w h a t rd is Þ pðS left Þ¼ 1 4 (cid:2) pðX i(cid:4)2;j ÞþpðX i(cid:4)1;j ÞþpðX i(cid:4)2;jþ1 ÞþpðX i(cid:4)1;jþ1 Þ (cid:3) ð42Þ 557722
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 10
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+10 X. Jinwu etal.
+573
+(cid:2) (cid:3)
+1
+557755 pðS right Þ¼ 4 pðX i;j ÞþpðX iþ1;j ÞþpðX i;jþ1 ÞþpðX iþ1;jþ1 Þ ð43Þ
+576 Define p 0 as the threshold of conflict probability. If
+577 pðS forward Þ<p 0 , the UAV maintains forward flight. If
+578 pðS forward ÞPp 0 , a conflict alert is given. Comparing pðS left Þ
+579 and pðS right Þ, if pðS left Þ<pðS right Þ, the UAV changes heading
+580 and performs a left-turn maneuver, otherwise it performs a
+581 right-turnmaneuver.
+582 The same principle applies in a three-dimensional case.
+583 Define S above as the front-above unit area of the UAV and
+584 S below asthefront-belowunitareaoftheUAV.Whenaconflict
+585 occurs, maneuvering in horizontal plane is considered prefer-
+586 able. If pðS forward ÞPp 0 , pðS left ÞPp 0 and pðS right ÞPp 0 , it
+587 means the conflict cannot be solved in the horizontal plane.
+588 Comparing pðS above Þ and pðS below Þ, if pðS above Þ<pðS below Þ, the
+589 UAV performs a climbing maneuver, otherwise it performs a
+590 descendingmaneuver.
+591 Toillustratethevalidityofairspacesafetyconstructionand
+592 theconflictresolutionmethod,anexperimentofUAVforma-
+593 tionflying withobstacleavoidanceisperformed. Sincepower
+594 lines and towers are some of the most dangerous obstacles in
+Fig.17 NominaltrajectoriesandvelocitiesoffiveUAVs.
+595 low altitude airspace, a dried-up riverbed is chosen as the
+596 experimentsite.Weconstructedthreeartificialpolesinatrian-
+597 gle and joined the three peaks with power lines to simulate
+598 obstacles (see Fig.14). Table1 Parametersusedinexample.
+599 Fig. 15 shows the trajectories that UAVs use to avoid the
+600 artificialobstacle.ThreeUAVsflyfromeasttowestinthehor- Parameter Value
+601 izontal planewiththe altitudeH=15m. Theredareain the rA ðkmðminÞ(cid:4)1=2Þ 0.2
+1
+602 center of Fig. 18 indicates the addition of the artificial poles rA ðkmðminÞ(cid:4)1=2Þ 0.1
+2
+603 into thesafety field. rA ðkmðminÞ(cid:4)1=2Þ 0.1
+604 Fig.16illustratesthevariationsofsafetyfieldsinformation V 3
+f
+ðkm=minÞ 5
+605 flight. UAVs take off at time t=0s. Five different moments V
+b
+ðkm=minÞ 2
+606 at5,17,25,30and38sarechosentodeterminethesafetyfield. V
+a
+ðkm=minÞ 0.9
+607 The time variants andtendencies of the safety field caneasily V d ðkm=minÞ 1.5
+608 be observed. The heading changes made by UAVs when per- V l ðkm=minÞ 3
+609 forming conflictresolution canalso beobserved. s(s) 60
+T(min) 15
+vB ðkm=minÞ [0,10,0]T
+610 4.2. Trajectory planning X 0 (km) [50,0,H]T
+X (km) [50,100,H]T
+D
+m 99
+611 ConsiderthatUAVBenterstheairspaceregionSwhereother
+612 UAVsareflying.UAVBstartsfromtheentrypointattime0
+613 tothedestinationbeforetimeTataconstantvelocity.Thepre-
+614 determinedtrajectoryofUAVBisastraightline.However,as
+615 a result of the presence of other UAVs, this trajectory is not term represents the safety requirement that the conflict risk 631
+616 ensured to be of low conflict risk. UAV B can pick a fixed alongthe trajectorymust beas low aspossible. 632
+617 number m of direction changes at specified points in time InthecomputationofsðXÞ,thetrajectoryisdiscretizedby 633
+618
+0<t
+1
+<t
+2
+<(cid:6)(cid:6)(cid:6)<t
+m
+<t.
+m waypoints. Therefore, the sum of the conflict risk of the 634
+619 The problem of finding an optimal trajectory that mini- waypoints p 1 ;p 2 ;...;p m is taken as a measure of the conflict 635
+620 mizesthesumofthetotalflighttimeandtheconflictriskalong riskalong itstrajectory.The cost functionJ reduces to 636
+621 itscurrenttrajectory isformulated as ( ) 637
+622 n R o Xm
+J¼min T n þg 0 zsðXÞdX ð44Þ J¼min T n þg i¼1 sðp i Þ ð45Þ
+662244 s:t: T n ¼ kv d B n k ; t2½t 0 ;t 0 þDt(cid:2) 663399
+Thisproblemcanbeeasilysolvedbythesequentialquadra- 640
+625 where J is a weighted sum of the total flight time T n and the tic programming (SQP) method, which has proven highly 641
+626 conflict risk along its trajectory; z is the trajectory of UAV effective for solving constrained optimization problems with 642
+627 B; d n is the total distance of the trajectory; vB is the velocity smoothnonlinearfunctionsintheobjectivesandconstraints.24 643
+628 ofUAVBandgistheweightcoefficient.Thefirsttermofcost Inthisexample,thepredeterminedstraighttrajectoryistaken 644
+629 functionJshowstheeconomicrequirementthatUAVBneeds astheinitialconditionforthesolution.Becausethevelocityof 645
+630 to flythrough the airspaceas quickly as possible. The second UAV B is constant, a smaller g means the less deviation of 646
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 11
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+Flight safetymeasurements of UAVsin congested airspace 11
+Supposing that five UAVs are moving in a three- 650
+dimensional airspace region and each UAV is flying at con- 651
+stant velocity along a straight line during the time interval T. 652
+Thenominal trajectoriesof UAVsare shown inFig. 17. 653
+The uncertainty that affects UAV future positions is char- 654
+acterizedbyr 1 A,r 2 Aandr 3 A.Thenumberofwaypointsistaken 655
+as m=99 (e start point and the end point are not included). 656
+UAV B has to fly through the airspace region in 15min at a 657
+constant velocity. The entry point and destination point of 658
+UAVBare X 0 andX D .UAVBcanchange itsdirectiononly 659
+onthehorizontalplane.Alltheparametersusedintheexam- 660
+pleare givenin Table1. 661
+Fig.18(a)showstheairspacesafetyfieldandoptimaltrajec- 662
+toryofUAVBonthehorizontalplaneofH=0kmhigh.When 663
+UAVBneedstogothroughtheairspaceregionassoonaspos- 664
+sible,trajectory1willbeoptimal,butthistrajectoryisatriskfor 665
+conflictwithotherUAVs.Incontrast,trajectory2ismoresafe, 666
+although it takes more time. However, there is a tradeoff 667
+between efficiency and safety that depends on the choice of 668
+appropriate weight coefficient g. Fig.18(b) and (c) show the 669
+casesofH=5kmhighandH=10kmhigh,respectively. 670
+Fig. 19shows that the length of all three optimal trajecto- 671
+ries increase when the weight coefficient g grows. Obviously, 672
+the higher g denotes greater safety requirements and leads to 673
+a longer trajectory. UAVs need to avoid approaching the 674
+congested regions of high conflict risk, which results in more 675
+deviationin predetermined trajectory. 676
+5. Conclusions 677
+(1) Thesafetyenvelopeisavariable-sizeprotectedzonefor 667789
+different UAVs. In a predetermined response time, the 680
+conflict probability increases with the maximum flight 681
+velocityof UAV ineach direction. 682
+(2) BasedontheuncertaintyofUAVpositionsinthefuture, 683
+a probabilistic approach is presented to evaluate 684
+the conflict probability between a space point and the 685
+UAV safety envelope in a mid-term horizon. With the 686
+assumptionofequivalentspheres,ananalyticalapprox- 687
+imationof the conflict probability isderived. 688
+(3) The airspace safety field is constructed to indicate the 689
+Fig.18 Safetyfieldandoptimaltrajectoriesinhorizontalplane.
+occupancy distribution of airspace. This information 690
+can be used for UAV conflict resolution and trajectory 691
+planningof newly enteringUAVs. 692
+693
+Acknowledgement 694
+This work was supported by the National Basic Research 695
+Program ofChina (No. 2011CB707002). 696
+References 697
+1. Zhang J. New development and application of airspace surveil- 698
+lance technology. Acta Aeronaut Astronaut Sin 2011;32(1):1–14 699
+[Chinese]. 700
+Fig. 19 Length of optimal trajectory of 0, 5 and 10km high 2. Reich PG. Analysis of long-range air traffic systems: separation 701
+planes. standardsI.JNavigation1966;19(1):88–98. 702
+3. Reich PG. Analysis of long-range air traffic systems: separation 703
+647 predetermined trajectory and less flight time. A bigger g con- standardsII.JNavigation1966;19(2):169–86. 704
+648 tributes a greater priority to the low conflict risk requirement 4. Reich PG. Analysis of long-range air traffic systems: separation 705
+649 andleadsto a less conflict-pronetrajectoryfor safety. standardsIII.JNavigation1966;19(3):331–47. 706
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
+
+================================================================================
+PAGE 12
+================================================================================
+
+CJA679 No.ofPages12
+3September2016
+12 X. Jinwu etal.
+707 5. Brooker P. Lateral collision risk in air traffic system: a ‘Post— 19. Gillula JH, Huang HM, Vitus MP, Tomlin CJ. Design of 749
+708 REICH’eventmodel.JNavigation2003;56(3):399–409. guaranteed safe maneuvers using reachable sets: autonomous 750
+709 6. Kopardekar P, Schwartz A, Magyarits S, Rhodes J. Airspace quadrotor aerobatics in theory and practice. In: Proceedings of 751
+710 complexitymeasurement:anairtrafficcontrolsimulationanalysis. 2010IEEEinternationalconferenceonroboticsandautomation, 752
+711 IntJIndustEng-TheoryApplPract2009;16(1):61–70. 2010 May 3–8. Anchorage (AK), Piscataway (NJ): IEEE Press; 753
+712 7. Sridhar B, Sheth KS, Grabbe S. Airspace complexity and its 2010.p.1649–54. 754
+713 applicationinairtrafficmanagementProceedingsofthe2ndUSA/ 20. GreatwoodC,RichardsA.Minimalsensorscanningvolumesfor 755
+714 Europe air traffic management R&D semina, 1998 December 1– helicopterterrainavoidance.In:AIAAguidance,navigationand 756
+715 4.Orlando(FL),Brussels(Belgium):EurocontrolPress;1999. control conference, 2010 August 2–5. Toronto. Reston: AIAA; 757
+716 8. PrandiniM,PuttaV,HuJH.Aprobabilisticmeasureofairtraffic 2010.p.1–8. 758
+717 complexity in 3-D airspace. Int J Adapt Control Sig Process 21. Nanjian Z, Zhangping L, Yiru R, Jinwu X. Fast calculation 759
+718 2010;24(10):813–29. method for helicopter reachable domain in forward flight. J 760
+719 9. Paielli RA, ErzbergerH. Conflict probability estimation for free BeijingUnivAeronautAstronaut2014;40(6):810–4[Chinese]. 761
+720 flight.JGuidControlDyn1997;20(3):588–96. 22. Erzberger H, Paielli RA, Isaacson DR, Eshow MM. Conflict 762
+721 10. YangLC,KucharJK.Prototypeconflictalertingsystemforfree detection and resolution in the presence of prediction error. In: 763
+722 flight.JGuidControlDyn1997;20(4):768–73. Proceedingsofthe1stUSA/EuropeairtrafficmanagementR&D 764
+723 11. PrandiniM,HuJH,LygerosJ,SastryS.Aprobabilisticapproach seminar, 1997 June 17–20. Saday (France), Brussels (Belgium): 765
+724 to aircraft conflict detection. IEEE Trans Intell Transport Syst, EurocontrolPress;1997. 766
+725 SpecIssAirTrafficControl-PartI2000;1(4):199–220. 23. Hu JH. A study of conflict detection and resolution in free flight 767
+726 12. Hu JH, Prandini M, Sastry S. Aircraft conflict prediction in the [dissertation].Berkeley:UniversityofCaliforniaatBerkeley;1999. 768
+727 presence of a spatially correlated wind field. IEEE Trans Intell 24. GillPE,MurrayW,SaundersMA.SNOPT:anSQPalgorithmfor 769
+728 TransportSyst2005;16(3):326–40. large-scale constrained optimization. SIAM J Optimiz 2006;12 770
+729 13. Jackson JA, Boskovic JD. Application of airspace encounter (4):979–1006. 771
+730 model for prediction of intruder dynamicsAIAA modeling and 772
+731 simulationtechnologiesconference,2012August13-16.Minneapolis Xiang Jinwu is a professor and Ph.D. supervisor at the School of 773
+732 (MN),Reston:AIAA;2012.p.985–1004. Aeronautic Science and Engineering, Beihang University, Beijing, 774
+733 14. Blom HAP, Bakker GJ. Conflict probability and incrossing China.HereceivedhisPh.D.fromNanjingUniversityofAeronautics 775
+734 probabilityinairtrafficmanagementProceedingsofthe41stIEEE andAstronauticsin1993.HiscurrentresearchinterestsincludeUAV 776
+735 conference on decision and control, 2002 December 10–13. Las systems,aircraftdynamicsandcontrol. 777
+736 Vegas(NV),Piscataway(NJ):IEEEPress;2003.p.2421–6. 778
+737 15. BlomHAP,KrystulJ,BakkerGJ,KlompstraMB,KleinObbink LiuYangisaPh.D.studentattheSchoolofAeronauticScienceand 779
+738 BK.FreeflightcollisionriskestimationbysequentialMonteCarlo Engineering,BeihangUniversity,Beijing,China.Hisareasofresearch 780
+739 simulationStochastichybridsystems.Taylor&Francis/CRCPress; include aircraft trajectory optimization and conflict detection and 781
+740 2007.p.249–81. resolution. 782
+741 16. VisintiniAL,GloverW,LygerosJ,MaciejowskiJ.MonteCarlo 783
+742 optimization for conflict resolution in air traffic control. IEEE LuoZhangpingisanassociateprofessorandmasterstudentsupervisor 784
+743 TransIntellTransportSyst2006;7(4):470–82. at the School of Aeronautic Science and Engineering, Beihang 785
+744 17. Lygeros J. On reachability and minimum cost optimal control. University, Beijing, China. He received his Ph.D. from Beihang 786
+745 Automatica2004;40(6):917–27. Universityin2004.Hiscurrentresearchinterestsincludeflightsafety, 787
+746 18. Mitchell I, Bayen A, Tomlin C. A time-dependent Hamilton- aircraftdynamicsandcontrol. 788
+789
+747 Jacobi formulation of reachable sets for continuous dynamic
+748 games.IEEETransAutomControl2005;50(7):947–57.
+Pleasecitethisarticleinpressas:JinwuXetal.FlightsafetymeasurementsofUAVsincongestedairspace,ChinJAeronaut(2016),http://dx.doi.org/10.1016/j.
+cja.2016.08.017
