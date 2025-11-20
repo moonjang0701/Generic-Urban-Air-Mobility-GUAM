@@ -15,13 +15,6 @@ fprintf('  Safety Envelope Implementation (Paper-Based)\n');
 fprintf('  Chinese Journal of Aeronautics, 2016\n');
 fprintf('═══════════════════════════════════════════════════════════════\n\n');
 
-%% Navigate to GUAM Root Directory
-% This script needs to be in GUAM root to access simSetup.m
-script_dir = fileparts(mfilename('fullpath'));  % Get current script directory
-guam_root = fileparts(script_dir);              % Go up one level to GUAM root
-cd(guam_root);                                   % Change to GUAM root
-fprintf('  Working directory: %s\n\n', pwd);
-
 %% Setup GUAM Environment
 simSetup;
 model = 'GUAM';
@@ -49,62 +42,41 @@ for speed_idx = 1:num_speeds
         cruise_speed_knots, cruise_speed_fps);
     fprintf('╚═══════════════════════════════════════════════════════════╝\n\n');
     
-    %% Re-run simSetup for each simulation
-    fprintf('  Initializing GUAM environment...\n');
-    simSetup;
-    
-    %% Define Cruise Level Flight Trajectory using GUAM Pattern
+    %% Define Cruise Level Flight Trajectory
     fprintf('  Setting up cruise trajectory...\n');
     
-    % Setup timeseries trajectory (following exam_TS_Hover2Cruise_traj.m pattern)
-    userStruct.variants.refInputType = 3; % Timeseries input
+    SimIn.StopTime = 60;  % 60 seconds of flight
     
-    % Define time points
-    time = [0; 60]';  % 60 seconds of flight
-    N_time = length(time);
+    % Trajectory: Straight cruise flight at constant speed
+    chi = [0; 0];           % Heading (deg) - straight north
+    gamma = [0; 0];         % Flight path angle (deg) - level flight
+    tas = [cruise_speed_fps; cruise_speed_fps];  % Constant cruise speed
+    h = [300; 300];         % Altitude (ft) - constant 300 ft
+    t = [0; SimIn.StopTime];
     
-    % Initialize trajectory arrays
-    vel     = zeros(N_time, 3);
-    vel_i   = zeros(N_time, 3);
-    pos     = zeros(N_time, 3);
-    chi     = zeros(N_time, 1);
-    chid    = zeros(N_time, 1);
+    trajectory.chi = chi;
+    trajectory.gamma = gamma;
+    trajectory.tas = tas;
+    trajectory.h = h;
+    trajectory.t = t;
     
-    % Define constant cruise flight trajectory
-    % Position: start at origin, move north at constant altitude
-    pos(1,:) = [0, 0, -300*0.3048];  % Start at 300 ft altitude (convert to meters, NED down is negative)
-    pos(2,:) = [cruise_speed_fps*0.3048*60, 0, -300*0.3048];  % End position after 60s
+    % Set initial conditions for cruise flight
+    target.tas = cruise_speed_knots;
+    target.gndtrack = chi(1);
+    target.gamma = 0;
+    target.h = h(1);
+    target.alpha = 2;       % Small angle of attack for level cruise
+    target.pitch = 2;       % Small pitch for cruise
+    target.beta = 0;
+    target.phi = 0;
     
-    % Velocity: constant north (inertial frame)
-    vel_i(1,:) = [cruise_speed_fps*0.3048, 0, 0];  % Convert ft/s to m/s
-    vel_i(2,:) = [cruise_speed_fps*0.3048, 0, 0];
-    
-    % Heading: straight north (0 degrees)
-    chi(:) = 0;
-    chid(:) = 0;
-    
-    % Add STARS library for quaternion functions
-    addpath(genpath('lib'));
-    
-    % Compute velocity in heading frame
-    q = QrotZ(chi);
-    vel = Qtrans(q, vel_i);
-    
-    % Setup trajectory to match bus
-    RefInput.Vel_bIc_des    = timeseries(vel, time);
-    RefInput.pos_des        = timeseries(pos, time);
-    RefInput.chi_des        = timeseries(chi, time);
-    RefInput.chi_dot_des    = timeseries(chid, time);
-    RefInput.vel_des        = timeseries(vel_i, time);
-    
-    target.RefInput = RefInput;
-    
-    %% Prepare simulation (following GUAM pattern)
-    SimIn.StopTime = 60;
+    % Initialize simulation
+    simInit;
     
     %% Run Simulation
     fprintf('  Running GUAM simulation...\n');
     try
+        set_param(model, 'StopTime', num2str(SimIn.StopTime));
         sim(model);
         fprintf('  ✓ Simulation completed successfully\n');
     catch ME
@@ -116,51 +88,34 @@ for speed_idx = 1:num_speeds
     fprintf('  Extracting trajectory data...\n');
     
     try
-        % Get logsout from base workspace (following simPlots_GUAM.m pattern)
+        % Get logsout from base workspace
         logsout = evalin('base', 'logsout');
-        SimOut = logsout{1}.Values;
         
-        % Extract time
-        time = SimOut.Time.Data;
+        % Extract position (NED coordinates)
+        X_NED_data = logsout{1}.Values.X_NED;
+        time = X_NED_data.Time;
+        pos_NED = X_NED_data.Data;  % [North, East, Down] in feet
         
-        % Extract position (NED coordinates) - from EOM.InertialData.Pos_bii
-        pos_NED = squeeze(SimOut.Vehicle.EOM.InertialData.Pos_bii.Data);  % [North, East, Down] in feet
+        % Extract velocity (body frame)
+        Vb_data = logsout{1}.Values.Vb;
+        vel_body = Vb_data.Data;  % [u, v, w] in ft/s
         
-        % Extract velocity and attitude from Sensor
-        V_total = SimOut.Vehicle.Sensor.Vtot.Data;      % Total velocity (ft/s)
-        gamma = SimOut.Vehicle.Sensor.gamma.Data;        % Flight path angle (rad)
-        psi = SimOut.Vehicle.Sensor.Euler.psi.Data;      % Yaw (rad)
-        theta = SimOut.Vehicle.Sensor.Euler.theta.Data;  % Pitch (rad)
-        phi = SimOut.Vehicle.Sensor.Euler.phi.Data;      % Roll (rad)
-        
-        % Combine Euler angles
-        euler = [phi, theta, psi];  % [roll, pitch, yaw] in radians
-        
-        % Calculate velocity components (approximate from total velocity and angles)
-        vel_body = zeros(length(time), 3);
-        vel_body(:,1) = V_total .* cos(gamma);  % u (forward)
-        vel_body(:,2) = zeros(length(time), 1); % v (lateral)
-        vel_body(:,3) = V_total .* sin(gamma);  % w (vertical)
+        % Extract attitude
+        Euler_data = logsout{1}.Values.Euler;
+        euler = Euler_data.Data;  % [roll, pitch, yaw] in radians
         
         % Calculate ground speed
-        ground_speed = V_total .* cos(gamma);
+        ground_speed = sqrt(vel_body(:,1).^2 + vel_body(:,2).^2);
         
         fprintf('  ✓ Extracted %d data points (%.1f seconds)\n', length(time), time(end));
         
     catch ME
         fprintf('  ✗ Data extraction failed: %s\n', ME.message);
-        fprintf('     Error details: %s\n', ME.getReport);
         continue;
     end
     
     %% Calculate Flight Performance Parameters
     fprintf('\n  Calculating UAV flight performance parameters...\n');
-    
-    % Check if data extraction was successful
-    if ~exist('pos_NED', 'var') || isempty(pos_NED)
-        fprintf('  ✗ Position data not available, skipping this speed\n');
-        continue;
-    end
     
     % Convert to SI units (meters, m/s)
     ft_to_m = 0.3048;
@@ -211,12 +166,6 @@ for speed_idx = 1:num_speeds
     %% Generate Safety Envelope Mesh (3D Visualization)
     fprintf('\n  Generating 3D safety envelope mesh...\n');
     
-    % Verify required variables exist
-    if ~exist('pos_NED_m', 'var') || ~exist('time', 'var') || isempty(pos_NED_m)
-        fprintf('  ✗ Required data not available for mesh generation\n');
-        continue;
-    end
-    
     % Select mid-flight point for visualization
     mid_idx = round(length(time) / 2);
     X_A = pos_NED_m(mid_idx, :)';  % UAV position at mid-flight
@@ -258,7 +207,7 @@ for speed_idx = 1:num_speeds
         env_z(i) = X_A(3) + az * uz;
     end
     
-    fprintf('  ✓ Safety envelope mesh generated (size: %dx%d)\n', size(env_x, 1), size(env_x, 2));
+    fprintf('  ✓ Safety envelope mesh generated\n');
     
     %% Calculate Conflict Probability Field
     fprintf('\n  Computing conflict probability field...\n');
@@ -329,38 +278,11 @@ fprintf('\n╔══════════════════════
 fprintf('║  Generating Visualizations\n');
 fprintf('╚═══════════════════════════════════════════════════════════╝\n\n');
 
-% Check if any results were successfully generated
-if isempty(results) || ~isfield(results, 'cruise_speed_knots')
-    fprintf('  ✗ No results available for visualization\n');
-    fprintf('  Please check simulation errors above\n');
-    return;
-end
-
-% Count successful results
-num_successful = 0;
-for i = 1:length(results)
-    if isfield(results(i), 'mesh') && ~isempty(results(i).mesh)
-        num_successful = num_successful + 1;
-    end
-end
-
-if num_successful == 0
-    fprintf('  ✗ No valid mesh data available for visualization\n');
-    return;
-end
-
-fprintf('  Found %d successful simulations to visualize\n', num_successful);
-
 %% Figure 1: 3D Safety Envelopes for All Speeds
 fprintf('  Creating Figure 1: 3D Safety Envelopes...\n');
 fig1 = figure('Name', 'Safety Envelopes - 3D View', 'Position', [100 100 1400 500]);
 
 for speed_idx = 1:num_speeds
-    % Skip if this simulation failed
-    if ~isfield(results(speed_idx), 'mesh') || isempty(results(speed_idx).mesh)
-        continue;
-    end
-    
     subplot(1, num_speeds, speed_idx);
     
     % Plot safety envelope surface
@@ -607,6 +529,5 @@ fprintf('  Implementation Complete!\n');
 fprintf('═══════════════════════════════════════════════════════════════\n');
 
 %% Save workspace
-save('Safety_Envelope_Results.mat', 'results', 'tau', 'sigma_v', 'k_c', 'Delta_t');
-fprintf('\n✓ Workspace saved to Safety_Envelope_Results.mat\n');
-fprintf('✓ Files saved in: %s\n\n', pwd);
+save('Safety_Envelope_Workspace.mat', 'results', 'tau', 'sigma_v', 'k_c', 'Delta_t');
+fprintf('\n✓ Workspace saved to Safety_Envelope_Workspace.mat\n\n');
