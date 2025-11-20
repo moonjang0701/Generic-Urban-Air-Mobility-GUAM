@@ -66,8 +66,15 @@ function result = run_single_MC_simulation(run_id, MC_params, ref_traj, corridor
         evalin('base', 'target.RefInput = RefInput;');
         evalin('base', 'simSetup;');
         
-        % Apply wind disturbance
+        % Apply wind disturbance (mean wind)
         apply_wind_to_GUAM(wind_N, wind_E, wind_D);
+        
+        % Apply turbulence
+        if isfield(MC_params, 'turb_enabled') && MC_params.turb_enabled(run_id)
+            apply_turbulence_to_GUAM(true, MC_params.turb_intensity{run_id}, MC_params.turb_seed(run_id));
+        else
+            apply_turbulence_to_GUAM(false, '', []);
+        end
         
         % Run simulation
         evalin('base', sprintf('SimIn.StopTime = %.6f;', ref_traj.time(end)));
