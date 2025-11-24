@@ -239,10 +239,11 @@ catch ME
 end
 
 %% Generate Plots
+% Define timestamp for use throughout (whether data extracted or not)
+timestamp = results.config.timestamp_file;
+
 if data_extracted
     fprintf('═══ Step 7: Generating plots ═══\n');
-    
-    timestamp = results.config.timestamp_file;
     
     %% Figure 1: 3D Trajectory
     fprintf('  Creating 3D trajectory plot...\n');
