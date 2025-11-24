@@ -1,4 +1,7 @@
-function [MC_params] = sample_MC_inputs(N_samples, wind_max_kt, ...\n                                        sigma_y0_m, sigma_heading0_deg, ...\n                                        sigma_tau_s, ctrl_gain_var, ...\n                                        nse_sigma_base_m, nse_sigma_var)
+function [MC_params] = sample_MC_inputs(N_samples, wind_max_kt, ...
+                                        sigma_y0_m, sigma_heading0_deg, ...
+                                        sigma_tau_s, ctrl_gain_var, ...
+                                        nse_sigma_base_m, nse_sigma_var)
 %% SAMPLE_MC_INPUTS
 % Generate Monte Carlo parameter samples for uncertainty propagation
 %
@@ -100,6 +103,20 @@ function [MC_params] = sample_MC_inputs(N_samples, wind_max_kt, ...\n           
     % Ensure positive values
     MC_params.nse_sigma_m = max(MC_params.nse_sigma_m, 0.1);  % Minimum 0.1m
     MC_params.gain_factor = max(MC_params.gain_factor, 0.5);  % Minimum 50% gain
+    
+    %% Sample turbulence parameters
+    % Enable turbulence for all samples
+    MC_params.turb_enabled = true(N_samples, 1);
+    
+    % Random seeds for reproducibility (each sample gets unique seed)
+    MC_params.turb_seed = randi([10000, 99999], N_samples, 1);
+    
+    % Turbulence intensity: 80% Light, 20% Moderate (realistic mix)
+    turb_levels = {'Light', 'Light', 'Light', 'Light', 'Moderate'};
+    MC_params.turb_intensity = cell(N_samples, 1);
+    for idx = 1:N_samples
+        MC_params.turb_intensity{idx} = turb_levels{randi(length(turb_levels))};
+    end
     
     %% Print statistics
     fprintf('  Wind samples generated:\n');
