@@ -182,6 +182,18 @@ for i = 1:n_runs
         end
         
         % Calculate trajectory characteristics
+        % Verify all position arrays have same length
+        min_len = min([length(x), length(y), length(z)]);
+        if min_len < length(x)
+            x = x(1:min_len);
+        end
+        if min_len < length(y)
+            y = y(1:min_len);
+        end
+        if min_len < length(z)
+            z = z(1:min_len);
+        end
+        
         dx = diff(x);
         dy = diff(y);
         dz = diff(z);
@@ -191,8 +203,21 @@ for i = 1:n_runs
         dy = dy(:);
         dz = dz(:);
         
+        % Double-check all have same length
+        min_diff_len = min([length(dx), length(dy), length(dz)]);
+        if min_diff_len < length(dx)
+            dx = dx(1:min_diff_len);
+        end
+        if min_diff_len < length(dy)
+            dy = dy(1:min_diff_len);
+        end
+        if min_diff_len < length(dz)
+            dz = dz(1:min_diff_len);
+        end
+        
         % Horizontal distances
         horiz_dist = sqrt(dx.^2 + dy.^2);
+        horiz_dist = horiz_dist(:);  % Ensure column vector
         total_dist = sum(horiz_dist);
         
         % Altitude change
@@ -202,6 +227,16 @@ for i = 1:n_runs
         % Prevent division by zero
         horiz_dist_safe = horiz_dist;
         horiz_dist_safe(horiz_dist_safe < 1e-6) = 1e-6;
+        
+        % Ensure dz and horiz_dist_safe are exactly same size
+        if length(dz) ~= length(horiz_dist_safe)
+            warning('Size mismatch: dz=%d, horiz_dist=%d', length(dz), length(horiz_dist_safe));
+            % Use minimum length
+            min_len2 = min(length(dz), length(horiz_dist_safe));
+            dz = dz(1:min_len2);
+            horiz_dist_safe = horiz_dist_safe(1:min_len2);
+        end
+        
         fpa = atan2d(dz, horiz_dist_safe);
         
         % Extract climb and descent angles
