@@ -54,6 +54,12 @@ east = trajectory_data.pos.East;
 down = trajectory_data.pos.Down;
 time = trajectory_data.time;
 
+% Ensure column vectors
+north = north(:);
+east = east(:);
+down = down(:);
+time = time(:);
+
 % Convert Down to altitude (h = -Down)
 alt = -down;
 

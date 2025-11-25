@@ -141,9 +141,29 @@ for i = 1:n_runs
             wptsZ = wptsZ_cell;
         
         % Convert to position vectors
-        x = wptsX(:, 1);  % X positions
-        y = wptsY(:, 1);  % Y positions
-        z = wptsZ(:, 1);  % Z positions (altitude)
+        % Ensure wptsX/Y/Z are matrices (may be vectors from some scenarios)
+        if size(wptsX, 2) >= 1
+            x = wptsX(:, 1);  % X positions (first column)
+        else
+            x = wptsX(:);     % Single column
+        end
+        
+        if size(wptsY, 2) >= 1
+            y = wptsY(:, 1);  % Y positions
+        else
+            y = wptsY(:);
+        end
+        
+        if size(wptsZ, 2) >= 1
+            z = wptsZ(:, 1);  % Z positions (altitude)
+        else
+            z = wptsZ(:);
+        end
+        
+        % Force column vectors
+        x = x(:);
+        y = y(:);
+        z = z(:);
         
         % Check if we have enough points
         if length(x) < 2
@@ -166,6 +186,11 @@ for i = 1:n_runs
         dy = diff(y);
         dz = diff(z);
         
+        % Ensure all diff arrays are column vectors and same size
+        dx = dx(:);
+        dy = dy(:);
+        dz = dz(:);
+        
         % Horizontal distances
         horiz_dist = sqrt(dx.^2 + dy.^2);
         total_dist = sum(horiz_dist);
@@ -174,18 +199,34 @@ for i = 1:n_runs
         alt_change = z(end) - z(1);
         
         % Flight path angles (degrees)
-        fpa = atan2d(dz, horiz_dist);
-        max_climb = max(fpa(fpa > 0));
-        max_descent = abs(min(fpa(fpa < 0)));
+        % Prevent division by zero
+        horiz_dist_safe = horiz_dist;
+        horiz_dist_safe(horiz_dist_safe < 1e-6) = 1e-6;
+        fpa = atan2d(dz, horiz_dist_safe);
         
-        if isempty(max_climb), max_climb = 0; end
-        if isempty(max_descent), max_descent = 0; end
+        % Extract climb and descent angles
+        climb_angles = fpa(fpa > 0);
+        descent_angles = fpa(fpa < 0);
+        
+        if ~isempty(climb_angles)
+            max_climb = max(climb_angles);
+        else
+            max_climb = 0;
+        end
+        
+        if ~isempty(descent_angles)
+            max_descent = abs(min(descent_angles));
+        else
+            max_descent = 0;
+        end
         
         % Heading changes (for turn analysis)
         heading = atan2d(dy, dx);
         dheading = diff(heading);
         
         % Normalize heading changes to [-180, 180]
+        % Make sure dheading is a column vector
+        dheading = dheading(:);
         dheading(dheading > 180) = dheading(dheading > 180) - 360;
         dheading(dheading < -180) = dheading(dheading < -180) + 360;
         
