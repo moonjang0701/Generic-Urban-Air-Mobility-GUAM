@@ -385,7 +385,7 @@ for i = 1:n_runs
     end
     
     % Check for obstacles
-    if ~isempty(ds2) && isstruct(ds2) && isfield(ds2, 'stat_obj')
+    if ~isempty(ds2) && isstruct(ds2) && isfield(ds2, 'stat_obj') && iscell(ds2.stat_obj)
         if i <= size(ds2.stat_obj, 1)
             % Check if obstacle data exists for this run
             scenario_catalog.runs(i).has_static_obstacle = ~isempty(ds2.stat_obj{i});
@@ -396,7 +396,7 @@ for i = 1:n_runs
         scenario_catalog.runs(i).has_static_obstacle = false;
     end
     
-    if ~isempty(ds3) && isstruct(ds3) && isfield(ds3, 'mov_obj')
+    if ~isempty(ds3) && isstruct(ds3) && isfield(ds3, 'mov_obj') && iscell(ds3.mov_obj)
         if i <= size(ds3.mov_obj, 1)
             % Check if moving obstacle data exists for this run
             scenario_catalog.runs(i).has_moving_obstacle = ~isempty(ds3.mov_obj{i});
