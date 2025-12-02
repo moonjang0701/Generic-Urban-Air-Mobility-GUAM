@@ -11,9 +11,11 @@ close all;
 clc;
 
 %% Add necessary paths
-addpath('./Exec_Scripts/');
-addpath('./Bez_Functions/');
-addpath(genpath('lib'));
+% Add parent directory (where simSetup.m is located)
+addpath('..');
+addpath('../Bez_Functions/');
+addpath(genpath('../lib'));
+addpath('../setup/');
 
 %% Simulation Parameters
 model = 'GUAM';
