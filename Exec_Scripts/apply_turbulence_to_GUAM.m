@@ -3,62 +3,67 @@ function apply_turbulence_to_GUAM(enable, intensity, random_seed)
 % Enable/disable and configure turbulence in GUAM simulation
 %
 % Inputs:
-%   enable      - Boolean, true to enable turbulence, false to disable
-%   intensity   - String, turbulence intensity level
-%                 'Light'    - Calm to light turbulence
-%                 'Moderate' - Moderate turbulence
-%                 'Severe'   - Severe turbulence
-%   random_seed - Integer, random seed for reproducibility (optional)
+%   enable - Boolean, true to enable turbulence, false to disable
+%   intensity - String: 'Light', 'Moderate', 'Severe' (or empty if disabled)
+%   random_seed - Integer for reproducibility (or empty if disabled)
 %
 % Description:
-%   Configures GUAM's built-in turbulence model (Dryden-type).
-%   Turbulence is added to the simulation environment and affects
-%   aircraft dynamics through aerodynamic forces.
+%   Configures Dryden turbulence model in GUAM's SimInput structure.
+%   Must be called AFTER simSetup and BEFORE sim(model).
 %
-% Usage:
-%   % Enable light turbulence
-%   apply_turbulence_to_GUAM(true, 'Light', 12345);
+% Turbulence Intensity Mapping:
+%   'Light': WindAt5kft = 15 m/s
+%   'Moderate': WindAt5kft = 30 m/s
+%   'Severe': WindAt5kft = 50 m/s
 %
-%   % Disable turbulence
+% Example:
+%   apply_turbulence_to_GUAM(true, 'Moderate', 12345);
 %   apply_turbulence_to_GUAM(false, '', []);
 %
 % Author: AI Assistant
-% Date: 2025-01-20
+% Date: 2025-12-02
 
-    if enable
-        %% Enable turbulence
-        evalin('base', 'SimIn.turbType = TurbulenceEnum.Enabled;');
+    if ~enable
+        % Disable turbulence
+        try
+            evalin('base', 'SimIn.turbType = 0;');  % 0 = No turbulence
+        catch
+            warning('Failed to disable turbulence in GUAM');
+        end
+        return;
+    end
+    
+    % Enable turbulence
+    try
+        evalin('base', 'SimIn.turbType = 1;');  % 1 = Dryden turbulence
         
-        %% Set turbulence intensity
-        % WindAt5kft parameter controls turbulence intensity
-        % Based on MIL-F-8785C turbulence specifications
-        switch lower(intensity)
-            case 'light'
-                wind_at_5kft = 15;  % m/s (light turbulence)
-            case 'moderate'
-                wind_at_5kft = 30;  % m/s (moderate turbulence)
-            case 'severe'
-                wind_at_5kft = 50;  % m/s (severe turbulence)
+        % Map intensity to WindAt5kft value
+        switch intensity
+            case 'Light'
+                wind_at_5kft = 15;
+            case 'Moderate'
+                wind_at_5kft = 30;
+            case 'Severe'
+                wind_at_5kft = 50;
             otherwise
-                warning('Unknown turbulence intensity "%s", using Light', intensity);
-                wind_at_5kft = 15;  % default: light
+                wind_at_5kft = 15;  % Default to Light
+                warning('Unknown turbulence intensity "%s", defaulting to Light', intensity);
         end
         
         evalin('base', sprintf('SimInput.Environment.Turbulence.WindAt5kft = %.1f;', wind_at_5kft));
         
-        %% Set random seeds for reproducibility
-        % GUAM uses 4 random seeds: [u_turb, v_turb, w_turb, p_gust]
-        if nargin >= 3 && ~isempty(random_seed)
-            seeds = random_seed + [0, 1, 2, 3];  % Offset for each component
+        % Set random seeds for reproducibility (4 seeds required)
+        if ~isempty(random_seed)
+            seed1 = random_seed;
+            seed2 = random_seed + 1000;
+            seed3 = random_seed + 2000;
+            seed4 = random_seed + 3000;
             evalin('base', sprintf('SimInput.Environment.Turbulence.RandomSeeds = [%d, %d, %d, %d];', ...
-                   seeds(1), seeds(2), seeds(3), seeds(4)));
+                seed1, seed2, seed3, seed4));
         end
         
-        fprintf('  Turbulence: ENABLED (%s, %.0f m/s at 5kft)\n', intensity, wind_at_5kft);
-        
-    else
-        %% Disable turbulence
-        evalin('base', 'SimIn.turbType = TurbulenceEnum.None;');
-        fprintf('  Turbulence: DISABLED\n');
+    catch ME
+        warning('Failed to configure turbulence in GUAM: %s', ME.message);
     end
+    
 end

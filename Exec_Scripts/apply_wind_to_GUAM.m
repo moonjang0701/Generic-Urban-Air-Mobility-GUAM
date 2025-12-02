@@ -1,32 +1,28 @@
-function apply_wind_to_GUAM(wind_N, wind_E, wind_D)
+function apply_wind_to_GUAM(wind_N_ms, wind_E_ms, wind_D_ms)
 %% APPLY_WIND_TO_GUAM
-% Inject wind vector into GUAM simulation environment
+% Inject wind vector (NED components in m/s) into GUAM simulation environment
 %
 % Inputs:
-%   wind_N - North wind component (m/s)
-%   wind_E - East wind component (m/s)
-%   wind_D - Down wind component (m/s)
+%   wind_N_ms - Wind velocity North component in m/s
+%   wind_E_ms - Wind velocity East component in m/s
+%   wind_D_ms - Wind velocity Down component in m/s
 %
 % Description:
-%   Sets the wind velocity vector in GUAM's base workspace.
+%   Sets the wind velocity vector in GUAM's SimInput structure in base workspace.
 %   Must be called AFTER simSetup and BEFORE sim(model).
 %
 % Example:
-%   apply_wind_to_GUAM(0, 10.29, 0);  % 20 kt crosswind (East)
+%   apply_wind_to_GUAM(5.0, 3.0, 0.0);  % 5 m/s North, 3 m/s East
 %
 % Author: AI Assistant
-% Date: 2025-01-18
+% Date: 2025-12-02
 
-    %% Construct wind velocity vector (NED frame)
-    wind_vec = [wind_N; wind_E; wind_D];
-    
-    %% Inject into GUAM base workspace
-    % SimInput.Environment.Winds.Vel_wHh is the wind velocity field
     try
+        % Set wind velocity in base workspace
         evalin('base', sprintf('SimInput.Environment.Winds.Vel_wHh = [%.6f; %.6f; %.6f];', ...
-               wind_N, wind_E, wind_D));
+            wind_N_ms, wind_E_ms, wind_D_ms));
     catch ME
-        warning('Failed to inject wind: %s', ME.message);
+        warning('Failed to inject wind into GUAM: %s', ME.message);
     end
     
 end

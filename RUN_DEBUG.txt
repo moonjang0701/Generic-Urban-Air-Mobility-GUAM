@@ -1,0 +1,12 @@
+MATLAB에서 다음을 실행하세요:
+
+cd /home/user/webapp/Exec_Scripts
+debug_GUAM_output
+
+이 스크립트는:
+1. 간단한 GUAM 시뮬레이션을 1회 실행
+2. logsout의 모든 요소 이름을 출력
+3. 위치 데이터 추출 시도
+
+실행 후 출력 결과를 보내주세요.
+특히 "Available signals:" 부분의 출력을 확인해야 합니다.

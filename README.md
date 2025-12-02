@@ -1,226 +1,205 @@
-% *************************************************************************  
-% NASA TTT-Autonomous Systems(AS): Intelligent Contingency Management (ICM)  
-%                       Generic UAM Simulation   
-%                       Version 1.1  
-% *************************************************************************  
-%  
-% *************************************************************************  
-% Point of Contact:  
-% Michael J. Acheson  
-% NASA Langley Research Center (LaRC)  
-% Dynamics Systems and Control Branch (D-316)  
-% email: michael.j.acheson@nasa.gov  
-% *************************************************************************  
-%  
-% Versions:  
-% Version 1.1, 10.11.2023, MJA: Incorporates expanded polynomial   
-% aero-propulsive database, trim tables and gain scheduled baseline controller.   
-% Also inlcludes trim scripts (see ./vehicles/Lift+Cruise/Trim/trim_helix.x)   
-% and linearization scripts (see ./vehcles/Lift+Cruise/Control/ctrl_scheduler_GUAM.m).  
-% Also includes piece-wise Bezier RefInput reference trajectory capability, and a   
-% simulation output animation script (./utilities/Animate_SimOut.m).  Also, this  
-% version enables a user defined output script that enables user to specify output variables  
-% (e.g., ./vehicles/Lift+Cruise/setup/User_SimOut/mySimOutFunc_Animate.m)  
-%  
-% *************************************************************************   
-% To run a simulation example case, just execute the RUNME.m script at the top level!  
-% **************************************************************************  
-  
-% This simulation is a generic UAM simulation.  It includes a generic   
-% transition aircraft model representative of a NASA Lift+Cruise   
-% vehicle configuration.    
-%   
-% Some of the key simulation components include:  
-% 1) A simulation architecture (e.g., signal buses)  that supports the most   
-% common rigid body 6-DOF frames of reference (e.g., Earth Centered Inertial,   
-% Earth Centered Earth Fixed (ECEF), North-East-Down (NED), Navigation,   
-% Velocity, Wind, Stability, and Body)  
-% 2) A simulation architecture that contains most aerospace signals/quantities   
-% of typical interest  
-% 3) A generic architecture that readily supports swapping in and out aircraft   
-% models, sensors, actuator models, control algorithms etc..  
-% 4) A wide array of desired trajectory or RefInputs (e.g., ramps, timeseries,  
-% piece-wise Bezier curves, and doublets)  
-% 5) A nominal gain scheduled (LQRi) baseline,  
-%  unified controller (same commands across three flight phases). The baseline   
-% controller operates in the heading frame (i.e., the NED frame rotated by the   
-% heading angle)  
-%   
-% Demonstration trajectory flights are found in the Exec_Scripts folder. Demo  
-% cases include:    
-%   1) a simple sinusoidal input case  (./Exec_Scripts/exam_TS_Sinusoidal_traj.m)  
-%   2) a basic lifting hover and transition to forward flight (./Exec_Scripts/exam_TS_Hover2Cruise_traj.m)  
-%   3) a cruise climbing right hand turn (./Exec_Scripts/exam_TS_Cruise_Climb_Turn_traj.m)  
-%   4) a takeoff, climbing transition to cruise and descending deceleration to landing using ramps  
-%   5) two examples of piece-wise Bezier curve trajectories: a) cruise decent and decel,   
-%      b) hover climb and acceleration  
-  
-% These demonstration trajectories can be performed by executing ./RUNME.m at the top level folder   
-% Alternatively, these examples can be accessed by adding the ./Exec_Scripts folder to the matlab path   
-% running the associated execution example script (e.g., "exam_TS_Cruise_Climb_Turn_traj.m" or   
-% "exam_TS_Hover2Cruise_traj.m" m-file).  Once the "GUAM" simulink model opens, run the model.    
-% Output data is provided by the matlab logged signal logsout{1}.  Many analysis scripts make use  
-% of the output data assigned to a SimOut structure: >>SimOut = logsout{1}.Values;  
-% Simulation input (fixed) parameters are provided in a large structure SimIn, whereas   
-% desired tunable simulation parameters are provided using the large structure: SimPar.    
-% The structure SimIn, SimPar and SimOut therefore contain the (fixed) simulation inputs,   
-% the (variable) simulation inputs, and the simulation outputs respectively.  Some basic  
-% results plotting can be performed by running the m-file: ./vehicles/Lift+Cruise/Utils/simPlots_GUAM.m  
-% Simulation results animation (e.g., creation of a .avi file or similar) is available by use  
-% of the script: ./utilities/Animate_SimOut.m.    
-% *************************************************************************  
-  
-% While the demonstration scripts are available, a user can in general select  
-% among variants subsystem variants through an input structure "userStruct.variants"    
-% then call the simSetup.m script to prepare the simulation for execution.  
-% The simulation makes use of an input structure: "userStruct" to change the variants   
-% of various subsystems (see ./setup/setupVariantStruct.m) that are used,   
-% and to specify various "switches" (see ./setup/setupSwitches.m).  If a user  
-% doesn't provide userStruct.variant selections, then the default choices   
-% (vehicle specific) as set in ./vehicles/Lift+Cruise/setup/setupDefaultChoices.m.   
-% An example of the available userStruct options are:  
-%   userStruct.variants:  
-%       refInputType: Timeseries  
-%       vehicleType: LiftPlusCruise  
-%       expType: DEFAULT  
-%       atmosType: US_STD_ATMOS_76  
-%       turbType: None  
-%       ctrlType: BASELINE  
-%       actType: FirstOrder  
-%       propType: None  
-%       fmType: Polynomial  
-%       eomType: Simple  
-%       sensorType: None  
-%  
-% The available options for the UserStruct.variants subfields are enumerations  
-% specified in the "ClassDef" folder. For example the actuator type variants  
-% available are found in the ActuatorEnum.m file:  
-%  
-% classdef ActuatorEnum < Simulink.IntEnumType  
-%  enumeration  
-%    None(1)  
-%    FirstOrder(2)  
-%    SecondOrder(3)   
-%    FirstOrderFailSurf(4)   
-%  end  
-% end  
-% A user can either write an m-file script or simply call (in the matlab command   
-% line):  
-% >>userStruct.variants.actType = 3; simSetup  
-% Now the GUAM sim is ready to execute using the SecondOrder actuator model.  
-%   
-% Users have a few options to provide desired trajectories and basic flight   
-% manuevers to execute.  The userStruct.variant.refInputType option selects    
-% (look in the Lift+Cruise Reference Inputs variant subsytem block at the simulation  
-% top level) between: FOUR_RAMP, ONE_RAMP, TIMESERIES, BEZIER, and DEFAULT (doublets) options.    
-% The timeseries is demonstrated in the Exec_Scripts folder for the m-files   
-% that contain "TS" in the name and they end with the suffix "_traj.m".   
-%   
-% A sample use case of the FOUR_RAMP is also contained in the Exec_Scripts, where   
-% Simulink ramp blocks are used to build a simple trajectory.  In this option,   
-% the user makes use of an input structure "target" to provide some basic trim  
-% configuration information and then provides timing and magnitude for the   
-% ramps blocks using the SimPar structure. Target field available for user   
-% specification include: 'alt', 'tas', 'gndtrack', 'RefInput', 'Rate', and  
-% 'stopTime'. A sample script "exam_RAMP.m" file demonstrates the use of both  
-% the user provided target structure, methods to programmatically specify Ramp settings  
-% (using SimPar), and the RAMP refInput variant subsytem.   
-%  
-% Generating and executing Piece-wise Bezier curve desired trajectory is shown  
-% in the example: ./Exec_Scripts/exam_Bezier.m  This script makes use of two options:  
-% 1) a user provided PW Bezier trajectory file (e.g., ./Exec_Scripts/exam_PW_Bezier_Traj.mat)  
-% that must contain the structure: >> pwcurve.waypoints = {wptsX, wptsY, wptsZ};  
-% and >> pwcurve.time_wpts = {time_wptsX, time_wptsY, time_wptsZ};  
-% 2) or a "target" structure input the contains the PW Bezier information,  
-% >> target.RefInput.Bezier.waypoints = {wptsX, wptsY, wptsZ};  
-% >> target.RefInput.Bezier.time_wpts = {time_wptsX time_wptsY time_wptsZ};  
-% along with the associated IC information (see ./Exec_Scripts/exam_Bezier.m for details)  
-% Additionally, a PW Bezier curve plotting script is available ./Bez_Functions/Plot_PW_Bezier.m  
-% for users to see the 3D trajectory, positions, velocities and accelerations (for each axis)   
-% of the desired PW Bezier trajectory.   
-%  
-% Two aero-propulsive model options are available: a low-fidelity, first-principles-based   
-% strip-theory model and a mid-fidelity, computationally-derived polynomial model. The aero-  
-% propulsive model is selected using the "SFunction" and "Polynomial" fmType variant options,   
-% respectively. The "SFunction" variant contains a matlab class/object based model that allows     
-% a user to build an aircraft configuration (airfoil, number and location of rotors,  
-% aerodynamic surfaces, etc.). The current aircraft configuration is a generic Lift+Cruise   
-% configuration (for more details, see the contents of the  
-% /vehicles/Lift+Cruise/AeroPro/SFuntion folder).  The "Polynomial" variant option is composed   
-% of blended response surface equations identified from primarily computational fluid dynamics   
-% (CFD) experiments for a generic Lift+Cruise configuration. The "SFunction" variant produces   
-% aero-propulsive model predictions throughout the flight envelope, whereas the "Polynomial"   
-% variant model limits may be exceeded and result in errors in some corners of the flight     
-% envelope when users ask for model predictions in areas that are not characterized by the   
-% response surface equations (the errors that may be encountered are intentional and intended   
-% to prevent extrapolation outside of the region of validity of the polynomial model). The   
-% polynomial aero-propulsive model executes much faster than the strip-theory "SFunction"   
-% variant and is, therefore, the default option  
-% (i.e., userStruct.variants.fmType = ForceMomentEnum.Polynomial)  
-% References for the "SFunction" and "Polynomial" fmType variant options, respectively, are:  
-% [1] Cook, J. W., and Hauser, J., "A Strip Theory Approach to Dynamic Modeling of  
-%     eVTOL Aircraft," AIAA SciTech 2021 Forum, AIAA Paper 2021-1720, Jan. 2021.   
-%     https://doi.org/10.2514/6.2021-1720.  
-% [2] Simmons, B. M., Buning, P. G., and Murphy, P. C., “Full-Envelope Aero-Propulsive  
-%     Model Identification for Lift+Cruise Aircraft Using Computational Experiments,”  
-%     AIAA AVIATION 2021 Forum, AIAA Paper 2021-3170, Aug. 2021.   
-%     https://doi.org/10.2514/6.2021-3170.  
-%  
-%  
-% Basic simulation execution performance can be viewed via Simulink scopes   
-% in the VehicleSimulation/Vehicle Generalized Control/Lift+Cruise/Control/Baseline   
-% block.  
-%  
-% Simulation Trimming:  The (offline) trim routines are found in the ./vehicles/Lift+Cruise/Trim folder.  
-% The top level trim routine is: trim_helix.m. This script was used to trim the overactuated Lift+Cruise     
-% vehicle using the polynomial aero-propulsive database.  NOTE: the routine could also be used for trimming   
-% with the strip theory s-function aero-propulsive model, but the code has not been modified to switch between   
-% the models (likely not functional using the s-function model).  In the top level trim_helix.m script the user   
-% specifies a range of forward and vertical velocities (could also provide a turn radius).  Next the user provides   
-% some quantities needed for the quadratic cost function/optimization (e.g., initial guess, offset, scaling and free variables).  
-% The quadratic cost function used by fmincon is: mycost.m, and the non-linear constraints function is nlinCon_helix.m.   
-% The results of the trim table schedule is then saved in a .mat file.  
-%   
-% Baseline controller gain scheduling:  The gain scheduling m-files are contained in the ./vehicles/Lift+Cruise/control/ folder.  
-% The top level script for gain scheduling the baseline controller (LSQi) is ctrl_scheduler_GUAM.m.  This script schedules the   
-% Longitudinal and Lateral axes seperately.  A few linearization scripts are available but the main script is get_lin_dynamics_heading.m.  
-% This script linearizes around a designated flight condition, and other scripts (e.g., get_lat_dynamics_heading.m and ctrl_lat.m) segregate  
-% the linearized dynamics according to desired axes.  
-%  
-% *************************************************************************  
-% Notices:  
-% Copyright 2024 United States Government as represented by the Administrator   
-% of the National Aeronautics and Space Administration. All Rights Reserved.  
-% This software calls, but does not include, the following third-party software,   
-% which is subject to the terms and conditions of its licensor, as applicable:  
-%  
-% The MATLAB®/SIMULINK® brand simulation software products,   
-% which are offered by The MathWorks, Inc.  
-%  
-% Users must supply their own licenses:     https://www.mathworks.com  
-%  
-% Disclaimers  
-% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY  
-% OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT   
-% LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO   
-% SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A   
-% PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE   
-% SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION,   
-% IF PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT,   
-% IN ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR   
-% RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS   
-% OR ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.    
-% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING   
-% THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,   
-% AND DISTRIBUTES IT "AS IS."   
-%   
-% Waiver and Indemnity:  RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST  
-% THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL  
-% AS ANY PRIOR RECIPIENT.  IF RECIPIENT'S USE OF THE SUBJECT SOFTWARE RESULTS  
-% IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH  
-% USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM,   
-% RECIPIENT'S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND   
-% HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS,  
-% AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW.    
-% RECIPIENT'S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE,   
-% UNILATERAL TERMINATION OF THIS AGREEMENT.  
+# UAM 버티포트 공역 시뮬레이션 (TSE 안전성 평가)
+
+## 개요
+
+도심 UAM(Urban Air Mobility) 버티포트 주변 원형 공역에서 이착륙 교통량에 따른 안전성을 평가하는 fast-time 시뮬레이터입니다.
+
+### 주요 기능
+
+1. **교통량 시뮬레이션**: 주어진 교통량(λ movements/hour)에 따라 이착륙 movements 생성
+2. **궤적 생성**: 각 항공기에 대한 nominal trajectory 생성 (GUAM 연동 준비)
+3. **난류/바람 모델링**: 랜덤 바람 및 난류 효과를 Ornstein-Uhlenbeck 프로세스로 모델링
+4. **TSE 안전성 평가**: 
+   - 수평 TSE 300m 한계 위반 여부 체크
+   - 고도 범위(300~600m) 유지 여부 체크
+5. **Monte Carlo 시뮬레이션**: 통계적 신뢰도 확보를 위한 반복 실행
+
+## NASA GUAM 연동 구조
+
+본 코드는 **NASA GUAM(Generic Urban Air Mobility) 시뮬레이터**와의 연동을 염두에 두고 설계되었습니다.
+
+### GUAM 연동 예정 부분
+
+#### 1. 궤적 생성 (`generate_nominal_trajectory` 함수)
+```python
+def generate_nominal_trajectory(movement, R, V_mean, dt, use_GUAM=False):
+    if use_GUAM:
+        # GUAM API 호출로 교체 예정
+        # traj_data = GUAM_API.get_trajectory(...)
+        # return Trajectory(t=traj_data['time'], x_nom=traj_data['x'], ...)
+        pass
+    else:
+        # 현재: 단순 선형 궤적
+        ...
+```
+
+#### 2. TSE 계산 (`apply_disturbances_and_check_TSE` 함수)
+```python
+def apply_disturbances_and_check_TSE(nom_traj, wind_params, use_GUAM_TSE=False):
+    if use_GUAM_TSE:
+        # GUAM에서 직접 계산된 TSE 데이터 사용
+        # guam_tse_data = GUAM_API.get_TSE_data(...)
+        # x_real = guam_tse_data['x_actual']
+        # tse_values = guam_tse_data['lateral_TSE']
+        pass
+    else:
+        # 현재: 단순 난류 모델
+        ...
+```
+
+### GUAM 연동 시 기대되는 개선사항
+
+- ✅ 실제 eVTOL 기체 동역학 응답 반영
+- ✅ 정밀한 제어 시스템 모델링
+- ✅ 실제 기상 조건 기반 TSE 계산
+- ✅ 3D 궤적 최적화 및 충돌 회피
+
+## 설치 및 실행
+
+### 필요 라이브러리
+
+```bash
+pip install numpy matplotlib
+```
+
+### 실행 방법
+
+```bash
+python uam_vertiport_simulation.py
+```
+
+## 시뮬레이션 파라미터
+
+### 공역 설정
+- **R_list**: 공역 반지름 [m] - 예: `[1000, 1500, 2000]`
+- **h_min, h_max**: 고도 범위 [m] - 300~600m
+
+### 교통량 설정
+- **lambda_list**: 교통량 [movements/hour] - 예: `[10, 20, 30, 40]`
+- **arrival_ratio**: 도착/출발 비율 - 기본값 0.5 (1:1)
+
+### 비행 파라미터
+- **V_mean**: 평균 지상 속도 [m/s] - 기본값 50 m/s
+- **dt**: 시간 step [s] - 기본값 1.0초
+
+### 바람/난류 파라미터
+- **W_max**: 최대 평균 풍속 [m/s] - 기본값 8.0 m/s
+- **sigma_gust_max**: 최대 난류 표준편차 [m/s] - 기본값 5.0 m/s
+- **tau_turb**: 난류 시상수 [s] - 기본값 10.0초 (OU process)
+
+### 안전성 기준
+- **tse_limit**: 수평 TSE 한계값 [m] - 기본값 300m
+- **h_min, h_max**: 허용 고도 범위 [m] - 300~600m
+
+### 시뮬레이션 설정
+- **T_sim**: 총 시뮬레이션 시간 [s] - 기본값 28,800초 (8시간)
+- **N_mc**: Monte Carlo 반복 횟수 - 기본값 100
+
+## 출력 결과
+
+### 1. 콘솔 출력
+```
+R [m]      λ [mvh/h]    Total      Unsafe     P(viol)      P(safe)     
+--------------------------------------------------------------------------------
+1000       10           8000       5974       0.7468       0.2532      
+1000       20           16000      12080      0.7550       0.2450      
+...
+```
+
+### 2. 시각화 결과
+
+#### simulation_results.png
+- **좌측**: TSE Violation 확률 히트맵
+- **우측**: Safe Flight 확률 히트맵
+- x축: 교통량 λ [movements/hour]
+- y축: 공역 반지름 R [m]
+
+#### tse_distribution.png
+- 각 (R, λ) 조합별 최대 lateral TSE 분포
+- TSE 한계선(300m) 표시
+
+## 주요 결과 해석
+
+### 시뮬레이션 결과 (예시)
+
+1. **공역 반지름 영향**:
+   - R=1000m: P(safe) ≈ 25%
+   - R=1500m: P(safe) ≈ 24%
+   - R=2000m: P(safe) ≈ 17%
+   - → 반지름이 클수록 비행 시간이 길어져 TSE 누적 증가
+
+2. **교통량 영향**:
+   - λ=10~40 movements/hour 범위에서 P(safe)는 비교적 일정
+   - → 현재 모델에서는 교통량보다 비행 거리가 더 큰 영향
+
+3. **개선 필요 사항**:
+   - 바람/난류 파라미터 조정 필요 (현재 설정이 과도할 수 있음)
+   - GUAM 연동 시 더 현실적인 제어 응답 반영 필요
+   - 다층 공역 운용 전략 고려
+
+## 코드 구조
+
+```
+uam_vertiport_simulation.py
+│
+├── 데이터 구조 (dataclass)
+│   ├── Movement: 단일 이착륙 정보
+│   ├── Trajectory: 궤적 데이터
+│   ├── WindParams: 바람/난류 파라미터
+│   └── SafetyCheck: 안전성 체크 결과
+│
+├── 1. 교통 생성 로직
+│   └── generate_movements(): 이착륙 movements 생성
+│
+├── 2. 궤적 생성
+│   └── generate_nominal_trajectory(): 기준 궤적 생성 (GUAM 연동 준비)
+│
+├── 3. 바람/난류 모델
+│   ├── sample_wind_and_turbulence_params(): 파라미터 샘플링
+│   ├── generate_OU_process(): OU process 생성
+│   └── apply_disturbances_and_check_TSE(): 외란 적용 및 TSE 체크
+│
+├── 4. 시뮬레이션 실행
+│   ├── run_simulation_for_R_lambda(): 단일 (R, λ) 조합 시뮬레이션
+│   └── run_full_simulation(): 전체 조합 시뮬레이션
+│
+├── 5. 결과 시각화
+│   ├── plot_results(): 안전성 확률 히트맵
+│   └── plot_tse_distribution(): TSE 분포 플롯
+│
+└── main(): 메인 실행 함수
+```
+
+## 향후 개선 계획
+
+### Phase 1: GUAM 연동
+- [ ] GUAM API 인터페이스 구현
+- [ ] 실제 eVTOL 동역학 모델 적용
+- [ ] GUAM TSE 데이터 직접 활용
+
+### Phase 2: 고급 기능
+- [ ] 항공기 간 충돌/근접 위험(NMAC) 분석
+- [ ] 다층 공역 운용 (300~450m, 450~600m 분리)
+- [ ] Poisson process 기반 교통 생성
+- [ ] 실시간 공역 용량 분석
+
+### Phase 3: 최적화
+- [ ] 교통 흐름 최적화 알고리즘
+- [ ] 동적 공역 관리 전략
+- [ ] 기상 조건별 운용 제한 분석
+
+## 참고 문헌
+
+- NASA GUAM (Generic Urban Air Mobility) Simulator
+- FAA TSE (Total System Error) Standards
+- Urban Air Mobility Concept of Operations
+
+## 라이선스
+
+본 코드는 연구 목적으로 작성되었습니다.
+
+## 작성자
+
+AI Senior Developer (Aviation Traffic Simulation Specialist)
+
+날짜: 2025-12-02
