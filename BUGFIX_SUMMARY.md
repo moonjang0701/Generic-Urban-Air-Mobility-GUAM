@@ -25,6 +25,19 @@ X_NED_data = logsout{1}.Values.X_NED;  % ← GUAM 표준 방식
 
 ## 해결 방법
 
+### 0. **CRITICAL: simInit 호출 필수!**
+
+```matlab
+simSetup;       % Setup simulation parameters
+simInit;        % ← 이것을 빼먹으면 logsout이 비어있음!
+sim(model);     % Run simulation
+```
+
+**simInit이 하는 일**:
+- 시뮬레이션 초기 조건 설정
+- 모델 파라미터 초기화
+- logsout 구조 준비
+
 ### 1. `logsout` 구조 이해
 
 GUAM은 `logsout`을 **cell array**로 반환:
@@ -35,8 +48,11 @@ GUAM은 `logsout`을 **cell array**로 반환:
 ### 2. 데이터 추출 방법
 
 ```matlab
-% GUAM 실행
-sim(model);  % simOut 없이 직접 실행
+% GUAM 초기화 및 실행 (올바른 순서!)
+simSetup;    % 1. Setup
+simInit;     % 2. Initialize (필수!)
+set_param(model, 'StopTime', num2str(stop_time));  % 3. 시간 설정
+sim(model);  % 4. 실행
 
 % Base workspace에서 logsout 가져오기
 logsout = evalin('base', 'logsout');
