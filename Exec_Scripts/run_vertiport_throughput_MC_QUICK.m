@@ -283,15 +283,21 @@ function [is_safe, max_tse, max_altitude_dev] = run_single_flight_GUAM_simple(..
     SimIn.stopTime = total_sim_time_s;
     
     % Run GUAM
-    simOut = sim(model, 'ReturnWorkspaceOutputs', 'on', 'StopTime', num2str(total_sim_time_s));
+    sim(model);
     
-    % Extract data
-    logsout = simOut.logsout;
-    pos_data = logsout.getElement('Pos_bIi').Values;
-    time = pos_data.Time;
-    pos_N = pos_data.Data(:,1);
-    pos_E = pos_data.Data(:,2);
-    pos_D = pos_data.Data(:,3);
+    % Extract data from base workspace
+    logsout = evalin('base', 'logsout');
+    
+    % Get position data (X_NED = [North, East, Down] in feet)
+    X_NED_data = logsout{1}.Values.X_NED;
+    time = X_NED_data.Time;
+    pos_NED_ft = X_NED_data.Data;  % [N, E, D] in feet
+    
+    % Convert feet to meters
+    ft2m = 0.3048;
+    pos_N = pos_NED_ft(:,1) * ft2m;
+    pos_E = pos_NED_ft(:,2) * ft2m;
+    pos_D = pos_NED_ft(:,3) * ft2m;
     altitude = -pos_D;
     
     % Reference trajectory

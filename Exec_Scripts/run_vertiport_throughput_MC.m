@@ -420,18 +420,22 @@ function [is_safe, max_tse, max_altitude_dev] = run_single_flight_GUAM(...
     SimIn.stopTime = total_sim_time_s;
     
     % Run GUAM simulation
-    simOut = sim(model, 'ReturnWorkspaceOutputs', 'on', 'StopTime', num2str(total_sim_time_s));
+    sim(model);
     
-    % Extract trajectory from logsout
-    logsout = simOut.logsout;
+    % Extract trajectory from base workspace
+    logsout = evalin('base', 'logsout');
     
-    % Get position data (NED frame)
-    pos_data = logsout.getElement('Pos_bIi').Values;
-    time = pos_data.Time;
-    pos_N = pos_data.Data(:,1);  % North
-    pos_E = pos_data.Data(:,2);  % East
-    pos_D = pos_data.Data(:,3);  % Down (negative altitude)
-    altitude = -pos_D;           % Convert to altitude (positive up)
+    % Get position data (X_NED = [North, East, Down] in feet)
+    X_NED_data = logsout{1}.Values.X_NED;
+    time = X_NED_data.Time;
+    pos_NED_ft = X_NED_data.Data;  % [N, E, D] in feet
+    
+    % Convert feet to meters
+    ft2m = 0.3048;
+    pos_N = pos_NED_ft(:,1) * ft2m;  % North [m]
+    pos_E = pos_NED_ft(:,2) * ft2m;  % East [m]
+    pos_D = pos_NED_ft(:,3) * ft2m;  % Down [m]
+    altitude = -pos_D;                % Convert to altitude (positive up) [m]
     
     % Compute reference trajectory (linear interpolation)
     ref_N = interp1([0, flight_time_s], [start_pos_NED(1), end_pos_NED(1)], time, 'linear', 'extrap');
