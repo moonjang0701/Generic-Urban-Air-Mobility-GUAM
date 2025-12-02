@@ -282,7 +282,11 @@ function [is_safe, max_tse, max_altitude_dev] = run_single_flight_GUAM_simple(..
     % Set stop time
     SimIn.stopTime = total_sim_time_s;
     
+    % Initialize simulation (CRITICAL!)
+    simInit;
+    
     % Run GUAM
+    set_param(model, 'StopTime', num2str(total_sim_time_s));
     sim(model);
     
     % Extract data from base workspace
