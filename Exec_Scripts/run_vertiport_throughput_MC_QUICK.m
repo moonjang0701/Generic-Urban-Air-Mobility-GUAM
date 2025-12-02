@@ -243,66 +243,73 @@ function [is_safe, max_tse, max_altitude_dev] = run_single_flight_GUAM_simple(..
                      [end_pos_NED; end_pos_NED]};
     waypoints_time = [0, flight_time_s];
     
-    % Setup userStruct
-    userStruct = struct();
-    userStruct.variants = struct();
-    userStruct.variants.EnvironmentModel = 'IsaAtmosphere';
-    userStruct.variants.TurbulenceModel = 'Dryden';
-    userStruct.variants.WindModel = 'ConstantWind';
-    userStruct.outputFname = '';
-    userStruct.trajFile = '';
-    
-    % Setup target
-    target = struct();
-    target.RefInput = struct();
-    target.RefInput.Bezier = struct();
-    target.RefInput.Bezier.waypoints = waypoints_pos;
-    target.RefInput.Bezier.time_wpts = waypoints_time;
+    % Configure userStruct in base workspace
+    evalin('base', 'userStruct.variants.refInputType = 5;');  % Bezier
+    evalin('base', 'userStruct.variants.EnvironmentModel = ''IsaAtmosphere'';');
+    evalin('base', 'userStruct.variants.TurbulenceModel = ''Dryden'';');
+    evalin('base', 'userStruct.variants.WindModel = ''ConstantWind'';');
+    evalin('base', 'userStruct.outputFname = '''';');
+    evalin('base', 'userStruct.trajFile = '''';');
     
     % Initial conditions
     [pos_i, vel_i, ~, chi, chid] = evalSegments(waypoints_pos{1}, waypoints_pos{2}, waypoints_pos{3}, ...
         waypoints_time(1), waypoints_time(2), waypoints_time(3), 0);
     
+    % Create RefInput structure
+    RefInput = struct();
+    RefInput.Bezier = struct();
+    RefInput.Bezier.waypoints = waypoints_pos;
+    RefInput.Bezier.time_wpts = waypoints_time;
     Q_i2c = [cos(chi/2), 0*sin(chi/2), 0*sin(chi/2), sin(chi/2)]';
-    target.RefInput.Vel_bIc_des = Qtrans(Q_i2c, vel_i);
-    target.RefInput.pos_des = pos_i;
-    target.RefInput.chi_des = chi;
-    target.RefInput.chi_dot_des = chid;
-    target.RefInput.trajectory.refTime = [0, flight_time_s];
+    RefInput.Vel_bIc_des = Qtrans(Q_i2c, vel_i);
+    RefInput.pos_des = pos_i;
+    RefInput.chi_des = chi;
+    RefInput.chi_dot_des = chid;
+    RefInput.trajectory.refTime = [0, flight_time_s];
     
-    % Run simSetup
-    simSetup;
+    % Assign to base workspace and run simSetup
+    assignin('base', 'RefInput', RefInput);
+    evalin('base', 'target.RefInput = RefInput;');
+    evalin('base', 'simSetup;');
     
-    % Apply wind
-    SimIn = apply_wind_to_GUAM(SimIn, movement.wind_speed_kt, movement.wind_dir_deg);
+    % Convert wind to NED components
+    wind_speed_ms = movement.wind_speed_kt * 0.514444;  % knots to m/s
+    wind_from_rad = deg2rad(movement.wind_dir_deg);
+    wind_N = -wind_speed_ms * cos(wind_from_rad);
+    wind_E = -wind_speed_ms * sin(wind_from_rad);
+    wind_D = 0;
     
-    % Apply turbulence
-    SimIn = apply_turbulence_to_GUAM(SimIn, movement.turbulence);
+    % Apply wind to GUAM
+    apply_wind_to_GUAM(wind_N, wind_E, wind_D);
     
-    % Set stop time
-    SimIn.stopTime = total_sim_time_s;
+    % Apply turbulence to GUAM
+    turb_enabled = ~strcmp(movement.turbulence, 'None');
+    if turb_enabled
+        turb_seed = randi([1000, 9999]);
+        apply_turbulence_to_GUAM(true, movement.turbulence, turb_seed);
+    else
+        apply_turbulence_to_GUAM(false, '', []);
+    end
     
-    % Initialize simulation (CRITICAL!)
-    simInit;
-    
-    % Run GUAM
-    set_param(model, 'StopTime', num2str(total_sim_time_s));
-    sim(model);
+    % Run GUAM simulation
+    evalin('base', sprintf('SimIn.StopTime = %.6f;', total_sim_time_s));
+    evalin('base', sprintf('sim(''%s'');', model));
     
     % Extract data from base workspace
     logsout = evalin('base', 'logsout');
+    SimOut = logsout{1}.Values;
     
-    % Get position data (X_NED = [North, East, Down] in feet)
-    X_NED_data = logsout{1}.Values.X_NED;
-    time = X_NED_data.Time;
-    pos_NED_ft = X_NED_data.Data;  % [N, E, D] in feet
+    % Get position data from SimOut structure
+    time_sim = SimOut.Time.Data;
+    pos_data = SimOut.Vehicle.Sensor.Pos_bIi.Data;  % [N, E, D] in feet
     
     % Convert feet to meters
     ft2m = 0.3048;
-    pos_N = pos_NED_ft(:,1) * ft2m;
-    pos_E = pos_NED_ft(:,2) * ft2m;
-    pos_D = pos_NED_ft(:,3) * ft2m;
+    pos_N = pos_data(:,1) * ft2m;
+    pos_E = pos_data(:,2) * ft2m;
+    pos_D = pos_data(:,3) * ft2m;
     altitude = -pos_D;
+    time = time_sim;
     
     % Reference trajectory
     ref_N = interp1([0, flight_time_s], [start_pos_NED(1), end_pos_NED(1)], time, 'linear', 'extrap');

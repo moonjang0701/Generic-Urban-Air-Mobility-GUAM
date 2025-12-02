@@ -1,49 +1,28 @@
-function SimIn = apply_wind_to_GUAM(SimIn, wind_speed_kt, wind_dir_deg)
+function apply_wind_to_GUAM(wind_N_ms, wind_E_ms, wind_D_ms)
 %% APPLY_WIND_TO_GUAM
-% Inject wind vector into GUAM simulation environment
+% Inject wind vector (NED components in m/s) into GUAM simulation environment
 %
 % Inputs:
-%   SimIn - GUAM SimIn structure
-%   wind_speed_kt - Wind speed in knots
-%   wind_dir_deg - Wind direction in degrees (0=North, 90=East, meteorological convention)
-%
-% Outputs:
-%   SimIn - Updated SimIn structure with wind applied
+%   wind_N_ms - Wind velocity North component in m/s
+%   wind_E_ms - Wind velocity East component in m/s
+%   wind_D_ms - Wind velocity Down component in m/s
 %
 % Description:
-%   Sets the wind velocity vector in GUAM's SimIn structure.
+%   Sets the wind velocity vector in GUAM's SimInput structure in base workspace.
 %   Must be called AFTER simSetup and BEFORE sim(model).
 %
 % Example:
-%   SimIn = apply_wind_to_GUAM(SimIn, 20, 90);  % 20 kt wind from East
+%   apply_wind_to_GUAM(5.0, 3.0, 0.0);  % 5 m/s North, 3 m/s East
 %
 % Author: AI Assistant
 % Date: 2025-12-02
 
-    % Convert knots to m/s
-    wind_speed_ms = wind_speed_kt * 0.514444;
-    
-    % Convert meteorological wind direction to NED components
-    % Meteorological: direction wind is coming FROM
-    % NED: positive North, positive East
-    wind_from_rad = deg2rad(wind_dir_deg);
-    
-    % Wind velocity components (NED frame)
-    % Wind blows FROM direction, so negate
-    wind_N = -wind_speed_ms * cos(wind_from_rad);
-    wind_E = -wind_speed_ms * sin(wind_from_rad);
-    wind_D = 0;  % No vertical wind component
-    
-    % Inject into SimIn structure
     try
-        if isfield(SimIn, 'Environment') && isfield(SimIn.Environment, 'Winds')
-            SimIn.Environment.Winds.Vel_wHh = [wind_N; wind_E; wind_D];
-        else
-            % Initialize if doesn't exist
-            SimIn.Environment.Winds.Vel_wHh = [wind_N; wind_E; wind_D];
-        end
+        % Set wind velocity in base workspace
+        evalin('base', sprintf('SimInput.Environment.Winds.Vel_wHh = [%.6f; %.6f; %.6f];', ...
+            wind_N_ms, wind_E_ms, wind_D_ms));
     catch ME
-        warning('Failed to inject wind: %s', ME.message);
+        warning('Failed to inject wind into GUAM: %s', ME.message);
     end
     
 end
